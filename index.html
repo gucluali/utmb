@@ -2,23 +2,24 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <title>Eskişehir UTMB® Strateji Portalı</title>
   <style>
     :root {
       --bg-dark: #090a0c;
       --sidebar-bg: #121418;
-      --accent: #e94e1b; /* UTMB Turuncusu */
-      --accent-dark: #a8320d;
+      --accent: #e94e1b;
       --accent-glow: rgba(233, 78, 27, 0.4);
       --text-main: #ffffff;
       --text-muted: #8b949e;
       --border: #2a2f38;
       --glass: rgba(255, 255, 255, 0.03);
       --card-bg: #161b22;
+      --safe-area-top: env(safe-area-inset-top);
+      --safe-area-bottom: env(safe-area-inset-bottom);
     }
 
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
     body {
       margin: 0;
@@ -28,6 +29,7 @@
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
       color: var(--text-main);
       height: 100vh;
+      height: 100dvh; /* Mobil tarayıcı barı sorunu için */
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -41,13 +43,13 @@
       display: flex;
       align-items: center;
       padding: 0 24px;
+      padding-top: var(--safe-area-top); /* iPhone Çentik Payı */
       justify-content: space-between;
       flex-shrink: 0;
-      z-index: 20;
+      z-index: 30;
       position: relative; 
     }
 
-    /* Logo Alanı */
     .brand {
       font-weight: 800;
       font-size: 18px;
@@ -76,15 +78,14 @@
         left: 50%;
         transform: translateX(-50%);
         font-weight: 900;
-        font-size: 16px;
+        font-size: 14px;
         text-transform: uppercase;
         letter-spacing: 2px;
         color: white;
-        border: 2px solid var(--accent);
-        padding: 6px 20px;
+        border: 1px solid var(--accent);
+        padding: 4px 15px;
         border-radius: 50px;
         background: rgba(0,0,0,0.4);
-        box-shadow: 0 0 20px rgba(233, 78, 27, 0.2);
         white-space: nowrap;
     }
     .header-center-title span { color: var(--accent); }
@@ -95,9 +96,10 @@
       flex: 1;
       height: calc(100vh - 60px);
       overflow: hidden;
+      position: relative;
     }
 
-    /* --- SIDEBAR --- */
+    /* --- SIDEBAR (PC) & TOP BAR (MOBILE) --- */
     aside {
       width: 280px;
       background: var(--sidebar-bg);
@@ -105,8 +107,9 @@
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
-      z-index: 10;
+      z-index: 20;
       justify-content: space-between;
+      transition: all 0.3s ease;
     }
 
     .scrollable-list {
@@ -114,8 +117,8 @@
       overflow-y: auto;
       padding: 20px 10px;
     }
-    .scrollable-list::-webkit-scrollbar { width: 4px; }
-    .scrollable-list::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+    /* Scrollbar Gizleme */
+    .scrollable-list::-webkit-scrollbar { width: 0px; background: transparent; }
 
     .menu-title {
       padding: 0 10px 10px;
@@ -129,7 +132,7 @@
     .menu-list { list-style: none; padding: 0; margin: 0; }
 
     .menu-item {
-      padding: 10px 12px;
+      padding: 12px;
       margin-bottom: 4px;
       cursor: pointer;
       color: #9ca3af;
@@ -138,14 +141,15 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      border-radius: 6px;
+      border-radius: 8px;
       transition: all 0.2s;
+      border: 1px solid transparent;
     }
     .menu-item:hover { background: rgba(255,255,255,0.05); color: white; }
     .menu-item.active {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(233, 78, 27, 0.15);
       color: white;
-      border-left: 3px solid var(--accent);
+      border-color: rgba(233, 78, 27, 0.3);
     }
     .menu-num { font-family: monospace; font-size: 11px; opacity: 0.5; min-width: 20px; }
 
@@ -161,26 +165,19 @@
         border: none;
         color: white;
         padding: 14px;
-        border-radius: 8px;
+        border-radius: 12px;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 10px;
+        gap: 8px;
         font-weight: 800;
         font-size: 13px;
         letter-spacing: 0.5px;
-        transition: 0.3s;
+        transition: 0.2s;
         box-shadow: 0 4px 15px rgba(233, 78, 27, 0.3);
     }
-    .nav-btn-main:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(233, 78, 27, 0.5);
-    }
-    .nav-btn-main.active {
-        box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
-        opacity: 0.9;
-    }
+    .nav-btn-main:active { transform: scale(0.96); }
 
     /* --- MAIN CONTENT --- */
     main {
@@ -188,16 +185,20 @@
       background: var(--bg-dark);
       position: relative;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
     .view-section {
         position: absolute;
         top: 0; left: 0; width: 100%; height: 100%;
         padding: 30px;
+        padding-bottom: calc(30px + var(--safe-area-bottom));
         overflow-y: auto;
         opacity: 0;
         pointer-events: none;
-        transition: opacity 0.3s ease;
+        transform: translateY(20px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
         display: flex;
         flex-direction: column;
     }
@@ -206,6 +207,7 @@
         opacity: 1;
         pointer-events: all;
         z-index: 5;
+        transform: translateY(0);
     }
 
     /* Başlık */
@@ -213,18 +215,18 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 30px;
+        margin-bottom: 20px;
         border-bottom: 1px solid rgba(255,255,255,0.1);
-        padding-bottom: 20px;
+        padding-bottom: 15px;
     }
     .dash-title h1 { margin: 0; font-size: 24px; font-weight: 300; }
     .dash-title span { font-weight: 800; color: var(--accent); }
     
     .stats-badge {
         background: rgba(255,255,255,0.1);
-        padding: 5px 15px;
+        padding: 4px 12px;
         border-radius: 50px;
-        font-size: 12px;
+        font-size: 11px;
         color: #ccc;
     }
 
@@ -232,94 +234,30 @@
     .events-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 20px;
+        gap: 15px;
         padding-bottom: 50px;
     }
 
-    /* YARIŞ KARTI */
     .event-card {
         background: var(--card-bg);
         border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: 20px;
+        border-radius: 12px;
+        padding: 15px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        transition: transform 0.2s, border-color 0.2s;
-        height: 160px;
+        height: 140px;
         position: relative;
         overflow: hidden;
     }
-    
-    .event-card:hover {
-        transform: translateY(-5px);
-        border-color: var(--accent);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-    }
-    
-    /* Kartın arkasına hafif bir UTMB logosu (dekoratif) */
-    .event-card::before {
-        content: '⛰';
-        position: absolute;
-        right: -10px;
-        bottom: -20px;
-        font-size: 100px;
-        opacity: 0.03;
-        color: white;
-    }
+    .event-card:active { background: rgba(255,255,255,0.05); }
 
-    .event-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-    }
-    
-    .event-flag {
-        font-size: 24px;
-        background: rgba(255,255,255,0.05);
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 8px;
-    }
-
-    .event-series-tag {
-        font-size: 9px;
-        text-transform: uppercase;
-        background: var(--accent);
-        color: white;
-        padding: 3px 6px;
-        border-radius: 4px;
-        font-weight: 700;
-    }
-
-    .event-title {
-        color: white;
-        font-size: 16px;
-        font-weight: 700;
-        margin-top: 15px;
-        line-height: 1.3;
-    }
-
-    .event-location {
-        color: var(--text-muted);
-        font-size: 12px;
-        margin-top: 5px;
-    }
-
-    .event-date {
-        margin-top: auto;
-        padding-top: 15px;
-        font-size: 12px;
-        color: var(--accent);
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-
+    .event-header { display: flex; justify-content: space-between; align-items: flex-start; }
+    .event-flag { font-size: 22px; }
+    .event-series-tag { font-size: 9px; text-transform: uppercase; background: var(--accent); color: white; padding: 3px 6px; border-radius: 4px; font-weight: 700; }
+    .event-title { color: white; font-size: 15px; font-weight: 700; margin-top: 10px; line-height: 1.3; }
+    .event-location { color: var(--text-muted); font-size: 12px; margin-top: 2px; }
+    .event-date { margin-top: auto; font-size: 11px; color: var(--accent); font-weight: 600; display: flex; align-items: center; gap: 5px; }
 
     /* SLAYT GÖRÜNTÜLEYİCİ */
     .slide-viewer-container {
@@ -329,13 +267,13 @@
         justify-content: center;
         height: 100%;
         width: 100%;
+        /* Swipe için alanın tamamını kaplamalı */
+        position: relative;
     }
 
     .viewer-frame {
       width: 100%;
       height: 100%;
-      max-height: 90vh;
-      max-width: 1600px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -348,11 +286,11 @@
       object-fit: contain;
       opacity: 0;
       transition: opacity 0.3s ease;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
     }
     img#currentSlide.visible { opacity: 1; }
 
-    /* Navigasyon Butonları */
+    /* Navigasyon Butonları (Mobilde gizlenebilir çünkü swipe var) */
     .nav-btn {
       position: absolute;
       top: 50%;
@@ -360,28 +298,88 @@
       background: rgba(0,0,0,0.5);
       border: 1px solid rgba(255,255,255,0.1);
       color: white;
-      width: 50px;
-      height: 50px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
-      transition: 0.2s;
+      font-size: 18px;
       z-index: 10;
     }
-    .nav-btn:hover { background: var(--accent); }
-    .nav-btn.prev { left: 20px; }
-    .nav-btn.next { right: 20px; }
+    .nav-btn.prev { left: 10px; }
+    .nav-btn.next { right: 10px; }
 
+    /* --- MOBILE OPTIMIZATION --- */
     @media (max-width: 768px) {
       .layout { flex-direction: column; }
-      aside { width: 100%; height: auto; max-height: 180px; border-right: none; border-bottom: 1px solid var(--border); }
-      .sidebar-footer { padding: 10px; } 
-      .events-grid { grid-template-columns: 1fr; }
-      .header-center-title { position: static; transform: none; font-size: 12px; margin-right: 10px; }
+      
+      /* Header Kompakt */
+      header { padding: 0 15px; height: 50px; }
+      .brand { font-size: 14px; }
+      .header-center-title { display: none; } /* Mobilde yer kaplamasın */
+      
+      /* Sidebar -> Üst Kayar Menü */
+      aside {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        flex-direction: column; /* Önce buton, sonra liste */
+        padding: 5px;
+        background: #111;
+      }
+
+      /* Ana Buton (Takvim) Üstte */
+      .sidebar-footer {
+          padding: 5px 10px;
+          border-top: none;
+          background: transparent;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          width: 100%;
+      }
+      .nav-btn-main { padding: 8px; font-size: 12px; width: auto; flex: 1; }
+      .copyright-text { display: none; } /* Mobilde gizle */
+
+      /* Liste -> Yatay Scroll (Story Modu) */
+      .scrollable-list {
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        padding: 5px 10px;
+        gap: 8px;
+        width: 100%;
+        scroll-snap-type: x mandatory;
+      }
+      
+      .menu-title { display: none; }
+      
+      .menu-item {
+        min-width: 120px; /* Kart gibi */
+        margin: 0;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        font-size: 11px;
+        padding: 8px;
+        background: rgba(255,255,255,0.05);
+        scroll-snap-align: start;
+        height: 60px; /* Sabit yükseklik */
+        border: 1px solid var(--border);
+      }
+      .menu-item .menu-num { display: none; }
+      
+      /* İçerik Alanı */
+      .view-section { padding: 15px; padding-bottom: 80px; }
       .dash-title h1 { font-size: 18px; }
+      .events-grid { grid-template-columns: 1fr; gap: 10px; }
+      
+      /* Slayt Modu */
+      .nav-btn { display: none; } /* Mobilde buton yerine Swipe kullanacağız */
+      .slide-viewer-container { justify-content: flex-start; padding-top: 20px; }
     }
   </style>
 </head>
@@ -390,51 +388,41 @@
   <header>
     <div class="brand">
       <div class="brand-icon">➜</div>
-      UTMB® <span>Eskişehir</span> Stratejisi
+      UTMB® <span>Eskişehir</span>
     </div>
 
     <div class="header-center-title">
         ALİ <span>GÜÇLÜ</span>
     </div>
 
-    <div style="font-size:12px; color:#666;">
-      v4.0 Final
-    </div>
+    <div style="font-size:10px; color:#666;">v5.0 Mobile</div>
   </header>
 
   <div class="layout">
     <aside>
-      <div class="scrollable-list">
-        <div class="menu-title">SUNUM DOSYALARI</div>
-        <ul class="menu-list" id="menuList">
-          </ul>
-      </div>
-      
-      <div class="sidebar-footer">
+      <div class="sidebar-footer" style="order: 1;">
           <button class="nav-btn-main active" id="btnHome" onclick="showDashboard()">
               <span>🌍</span> KÜRESEL TAKVİM
           </button>
-          <div style="margin-top:10px; font-size:10px; color:#444; text-align:center;">
-            © 2025 ESTÜ Strateji Ofisi
-          </div>
+      </div>
+
+      <div class="scrollable-list" style="order: 2;">
+        <div class="menu-title">SUNUM DOSYALARI</div>
+        <ul class="menu-list" id="menuList" style="display:contents;">
+          </ul>
       </div>
     </aside>
 
-    <main>
+    <main id="mainArea">
         
       <div id="dashboardView" class="view-section active-view">
           <div class="dash-header">
               <div class="dash-title">
-                  <h1>UTMB® <span>World Series Calendar</span></h1>
-                  <div style="font-size:13px; color:#888; margin-top:5px;">Dünyanın en prestijli ultra maraton serisi ve etkinlik takvimi.</div>
+                  <h1>UTMB® <span>World Series</span></h1>
               </div>
-              <div class="stats-badge">
-                 43+ ETKİNLİK
-              </div>
+              <div class="stats-badge">43+ ETKİNLİK</div>
           </div>
-
-          <div class="events-grid" id="events-container">
-              </div>
+          <div class="events-grid" id="events-container"></div>
       </div>
 
       <div id="slideView" class="view-section">
@@ -444,8 +432,10 @@
                 <img id="currentSlide" src="" alt="Sunum">
                 <button class="nav-btn next" id="btnNext">❯</button>
             </div>
-            <div style="margin-top:15px; color:#555; font-size:13px;">
-                <span id="slideCounter"></span> • <span id="slideName"></span>
+            <div style="margin-top:20px; color:#555; font-size:12px; text-align:center;">
+                <span id="slideCounter"></span><br>
+                <span id="slideName" style="color:#aaa;"></span>
+                <div style="margin-top:5px; font-size:10px; opacity:0.5;">(Kaydırmak için sürükleyin)</div>
             </div>
           </div>
       </div>
@@ -454,46 +444,35 @@
   </div>
 
   <script>
-    // --- SLAYT VERİLERİ ---
+    // --- VERİLER ---
     const slidesData = [
-      { file: "assets/slide_01.webp", title: "Kapak: Vizyon ve Ortaklık" },
-      { file: "assets/slide_02.webp", title: "UTMB® World Series Nedir?" }, 
-      { file: "assets/slide_03.webp", title: "Ekonomik Etki ve Turizm" },
-      { file: "assets/slide_04.webp", title: "Operasyonel Karmaşıklık" },
-      { file: "assets/slide_05.webp", title: "Yetenek Ekosistemi" },
-      { file: "assets/slide_06.webp", title: "Gönüllü Ordusu ve Roller" },
-      { file: "assets/slide_07.webp", title: "ESOGÜ Kritik Roller" },
-      { file: "assets/slide_08.webp", title: "ESTÜ Spor ve Teknoloji" },
-      { file: "assets/slide_09.webp", title: "Hizmet Mükemmelliği" },
-      { file: "assets/slide_10.webp", title: "Kazan-Kazan Modeli" },
-      { file: "assets/slide_11.webp", title: "Teşvik ve Ödül Modeli" },
-      { file: "assets/slide_12.webp", title: "İş Birliği Yol Haritası" },
+      { file: "assets/slide_01.webp", title: "Kapak: Vizyon" },
+      { file: "assets/slide_02.webp", title: "UTMB® Nedir?" }, 
+      { file: "assets/slide_03.webp", title: "Ekonomik Etki" },
+      { file: "assets/slide_04.webp", title: "Operasyon" },
+      { file: "assets/slide_05.webp", title: "Yetenek" },
+      { file: "assets/slide_06.webp", title: "Gönüllü Ordusu" },
+      { file: "assets/slide_07.webp", title: "ESOGÜ Roller" },
+      { file: "assets/slide_08.webp", title: "ESTÜ Spor Tek." },
+      { file: "assets/slide_09.webp", title: "Hizmet" },
+      { file: "assets/slide_10.webp", title: "Kazan-Kazan" },
+      { file: "assets/slide_11.webp", title: "Teşvik Modeli" },
+      { file: "assets/slide_12.webp", title: "Yol Haritası" },
       { file: "assets/slide_13.webp", title: "Sonraki Adımlar" },
-      { file: "assets/slide_14.webp", title: "Kapanış: Birlikte Tarih Yazalım" }
+      { file: "assets/slide_14.webp", title: "Kapanış" }
     ];
 
-    // --- GLOBAL UTMB VERİLERİ (STATİK & DOĞRU) ---
     const utmbEvents = [
-        { name: "Dacia UTMB® Mont-Blanc", location: "Chamonix, Fransa 🇫🇷", date: "Ağustos Sonu", tag: "FINALS" },
+        { name: "Dacia UTMB® Mont-Blanc", location: "Chamonix, Fransa 🇫🇷", date: "Ağustos", tag: "FINALS" },
         { name: "Western States™ 100", location: "California, ABD 🇺🇸", date: "Haziran", tag: "MAJOR" },
-        { name: "La Sportiva® Lavaredo Ultra Trail", location: "Cortina, İtalya 🇮🇹", date: "Haziran", tag: "SERIES" },
+        { name: "La Sportiva® Lavaredo", location: "Cortina, İtalya 🇮🇹", date: "Haziran", tag: "SERIES" },
         { name: "Transvulcania by UTMB®", location: "La Palma, İspanya 🇪🇸", date: "Mayıs", tag: "SERIES" },
-        { name: "Tarawera Ultra-Trail by UTMB®", location: "Rotorua, Yeni Zelanda 🇳🇿", date: "Şubat", tag: "SERIES" },
-        { name: "Doi Inthanon Thailand by UTMB®", location: "Chiang Mai, Tayland 🇹🇭", date: "Aralık", tag: "MAJOR" },
-        { name: "Val d'Aran by UTMB®", location: "Pyrenees, İspanya 🇪🇸", date: "Temmuz", tag: "MAJOR" },
-        { name: "Nice Côte d'Azur by UTMB®", location: "Nice, Fransa 🇫🇷", date: "Eylül", tag: "SERIES" },
-        { name: "Eiger Ultra-Trail™ by UTMB®", location: "Grindelwald, İsviçre 🇨🇭", date: "Temmuz", tag: "SERIES" },
-        { name: "Cappadocia Ultra-Trail®", location: "Nevşehir, Türkiye 🇹🇷", date: "Ekim", tag: "EVENT" },
-        { name: "Kodiak Ultra Marathons™ by UTMB®", location: "Big Bear Lake, ABD 🇺🇸", date: "Ekim", tag: "SERIES" },
-        { name: "Puerto Vallarta México by UTMB®", location: "Jalisco, Meksika 🇲🇽", date: "Kasım", tag: "SERIES" },
-        { name: "Ultra-Trail Snowdonia by UTMB®", location: "Wales, Birleşik Krallık 🇬🇧", date: "Mayıs", tag: "SERIES" },
-        { name: "Mozart 100™ by UTMB®", location: "Salzburg, Avusturya 🇦🇹", date: "Haziran", tag: "SERIES" },
-        { name: "Istria 100™ by UTMB®", location: "Umag, Hırvatistan 🇭🇷", date: "Nisan", tag: "SERIES" },
-        { name: "Wildstrubel by UTMB®", location: "Crans-Montana, İsviçre 🇨🇭", date: "Eylül", tag: "SERIES" },
-        { name: "Julian Alps Trail Run by UTMB®", location: "Kranjska Gora, Slovenya 🇸🇮", date: "Eylül", tag: "SERIES" },
-        { name: "Speedgoat™ Mountain Races", location: "Utah, ABD 🇺🇸", date: "Temmuz", tag: "SERIES" },
-        { name: "Paraty Brazil by UTMB®", location: "Paraty, Brezilya 🇧🇷", date: "Eylül", tag: "SERIES" },
-        { name: "Ultra-Trail Kosciuszko™ by UTMB®", location: "NSW, Avustralya 🇦🇺", date: "Aralık", tag: "SERIES" }
+        { name: "Tarawera Ultra-Trail", location: "Yeni Zelanda 🇳🇿", date: "Şubat", tag: "SERIES" },
+        { name: "Doi Inthanon Thailand", location: "Tayland 🇹🇭", date: "Aralık", tag: "MAJOR" },
+        { name: "Val d'Aran by UTMB®", location: "İspanya 🇪🇸", date: "Temmuz", tag: "MAJOR" },
+        { name: "Nice Côte d'Azur", location: "Fransa 🇫🇷", date: "Eylül", tag: "SERIES" },
+        { name: "Cappadocia Ultra-Trail®", location: "Türkiye 🇹🇷", date: "Ekim", tag: "EVENT" },
+        { name: "Kodiak Ultra Marathons™", location: "ABD 🇺🇸", date: "Ekim", tag: "SERIES" }
     ];
 
     let currentIndex = 0;
@@ -502,7 +481,7 @@
     const slideView = document.getElementById('slideView');
     const btnHome = document.getElementById('btnHome');
 
-    // --- GÖRÜNÜM YÖNETİMİ ---
+    // --- NAVİGASYON ---
     function showDashboard() {
         slideView.classList.remove('active-view');
         dashView.classList.add('active-view');
@@ -531,7 +510,12 @@
 
     function updateMenuUI() {
         document.querySelectorAll('.menu-item').forEach((item, i) => {
-            item.classList.toggle('active', i === currentIndex);
+            const isActive = i === currentIndex;
+            item.classList.toggle('active', isActive);
+            if(isActive) {
+                // Mobilde aktif olanı ekrana getir
+                item.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            }
         });
         document.getElementById('slideCounter').innerText = `Sayfa ${currentIndex + 1}/${slidesData.length}`;
         document.getElementById('slideName').innerText = slidesData[currentIndex].title;
@@ -543,8 +527,8 @@
         slidesData.forEach((slide, index) => {
             const li = document.createElement('li');
             li.className = 'menu-item';
-            const num = (index + 1).toString().padStart(2, '0');
-            li.innerHTML = `<span class="menu-num">${num}</span> ${slide.title}`;
+            // Mobilde kısa başlıklar daha iyi
+            li.innerHTML = `<span>${slide.title}</span>`;
             li.onclick = () => showSlideViewer(index);
             list.appendChild(li);
         });
@@ -552,13 +536,34 @@
 
     document.getElementById('btnNext').onclick = () => showSlideViewer(currentIndex + 1);
     document.getElementById('btnPrev').onclick = () => showSlideViewer(currentIndex - 1);
-    document.addEventListener('keydown', (e) => {
-        if(slideView.classList.contains('active-view')) {
-            if(e.key === 'ArrowRight') showSlideViewer(currentIndex + 1);
-            if(e.key === 'ArrowLeft') showSlideViewer(currentIndex - 1);
-            if(e.key === 'Escape') showDashboard();
+
+    // --- SWIPE (KAYDIRMA) DESTEĞİ ---
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    // Sadece slideView alanında swipe çalışsın
+    const swipeArea = document.getElementById('slideView');
+
+    swipeArea.addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, {passive: true});
+
+    swipeArea.addEventListener('touchend', e => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, {passive: true});
+
+    function handleSwipe() {
+        const sensitivity = 50; // Hassasiyet
+        if (touchEndX < touchStartX - sensitivity) {
+            // Sola Kaydır -> İleri Git
+            showSlideViewer(currentIndex + 1);
         }
-    });
+        if (touchEndX > touchStartX + sensitivity) {
+            // Sağa Kaydır -> Geri Git
+            showSlideViewer(currentIndex - 1);
+        }
+    }
 
     // --- ETKİNLİKLERİ YÜKLE ---
     function renderEvents() {
@@ -568,8 +573,6 @@
         utmbEvents.forEach(event => {
             const card = document.createElement('div');
             card.className = 'event-card';
-            
-            // Bayrağı bul (Basit emoji ayrıştırma)
             const flag = event.location.match(/[\uD83C][\uDDE6-\uDDFF][\uD83C][\uDDE6-\uDDFF]/) || "🚩";
 
             card.innerHTML = `
@@ -581,23 +584,27 @@
                     <div class="event-title">${event.name}</div>
                     <div class="event-location">${event.location.replace(flag, '').trim()}</div>
                 </div>
-                <div class="event-date">
-                    <span>📅</span> ${event.date}
-                </div>
+                <div class="event-date">📅 ${event.date}</div>
             `;
             container.appendChild(card);
         });
     }
 
     function getTagColor(tag) {
-        if(tag === 'FINALS') return '#e94e1b'; // Turuncu
-        if(tag === 'MAJOR') return '#d93a10'; // Koyu Turuncu
-        if(tag === 'SERIES') return '#333';   // Gri
-        if(tag === 'EVENT') return '#cc0000'; // Kırmızı (Türkiye için vurgu)
+        if(tag === 'FINALS') return '#e94e1b';
+        if(tag === 'MAJOR') return '#d93a10';
+        if(tag === 'EVENT') return '#cc0000';
         return '#444';
     }
 
-    // Başlat
+    // Klavye
+    document.addEventListener('keydown', (e) => {
+        if(slideView.classList.contains('active-view')) {
+            if(e.key === 'ArrowRight') showSlideViewer(currentIndex + 1);
+            if(e.key === 'ArrowLeft') showSlideViewer(currentIndex - 1);
+        }
+    });
+
     initMenu();
     renderEvents();
 
