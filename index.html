@@ -43,9 +43,10 @@
       justify-content: space-between;
       flex-shrink: 0;
       z-index: 20;
-      position: relative; /* Merkezdeki yazı için gerekli */
+      position: relative; 
     }
 
+    /* Logo Alanı - Düzeltildi */
     .brand {
       font-weight: 800;
       font-size: 18px;
@@ -53,6 +54,7 @@
       align-items: center;
       gap: 12px;
       letter-spacing: -0.5px;
+      color: white;
     }
     .brand-icon {
         width: 24px;
@@ -65,8 +67,9 @@
         color: white;
         box-shadow: 0 0 15px var(--accent-glow);
     }
+    .brand span { color: var(--accent); }
 
-    /* ORTA İSİM ALANI (YENİ EKLENDİ) */
+    /* ORTA İSİM ALANI */
     .header-center-title {
         position: absolute;
         left: 50%;
@@ -83,9 +86,7 @@
         box-shadow: 0 0 20px rgba(233, 78, 27, 0.2);
         white-space: nowrap;
     }
-    .header-center-title span {
-        color: var(--accent);
-    }
+    .header-center-title span { color: var(--accent); }
 
     /* --- LAYOUT --- */
     .layout {
@@ -104,33 +105,10 @@
       flex-direction: column;
       flex-shrink: 0;
       z-index: 10;
+      justify-content: space-between; /* İçeriği yay, butonu alta it */
     }
 
-    .sidebar-header {
-        padding: 20px;
-        border-bottom: 1px solid var(--border);
-    }
-
-    .nav-btn-main {
-        width: 100%;
-        background: var(--glass);
-        border: 1px solid var(--border);
-        color: white;
-        padding: 12px;
-        border-radius: 8px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-weight: 600;
-        transition: 0.2s;
-    }
-    .nav-btn-main:hover, .nav-btn-main.active {
-        background: var(--accent);
-        border-color: var(--accent);
-        box-shadow: 0 4px 12px var(--accent-glow);
-    }
-
+    /* Üst Menü Listesi */
     .scrollable-list {
       flex: 1;
       overflow-y: auto;
@@ -171,7 +149,41 @@
     }
     .menu-num { font-family: monospace; font-size: 11px; opacity: 0.5; min-width: 20px; }
 
-    /* --- MAIN CONTENT AREA --- */
+    /* ALT BUTON ALANI (Sol Altta) */
+    .sidebar-footer {
+        padding: 20px;
+        border-top: 1px solid var(--border);
+        background: rgba(0,0,0,0.2);
+    }
+
+    .nav-btn-main {
+        width: 100%;
+        background: linear-gradient(45deg, #cc4416, #e94e1b);
+        border: none;
+        color: white;
+        padding: 14px;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        font-weight: 800;
+        font-size: 14px;
+        letter-spacing: 0.5px;
+        transition: 0.3s;
+        box-shadow: 0 4px 15px rgba(233, 78, 27, 0.3);
+    }
+    .nav-btn-main:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(233, 78, 27, 0.5);
+    }
+    .nav-btn-main.active {
+        box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+        opacity: 0.9;
+    }
+
+    /* --- MAIN CONTENT --- */
     main {
       flex: 1;
       background: var(--bg-dark);
@@ -179,7 +191,7 @@
       overflow: hidden;
     }
 
-    /* VIEW 1: DASHBOARD (HABERLER) */
+    /* VIEW SECTIONS */
     .view-section {
         position: absolute;
         top: 0; left: 0; width: 100%; height: 100%;
@@ -198,6 +210,7 @@
         z-index: 5;
     }
 
+    /* Haber Başlığı */
     .dash-header {
         display: flex;
         justify-content: space-between;
@@ -206,46 +219,62 @@
     }
     .dash-title h1 { margin: 0; font-size: 24px; font-weight: 300; }
     .dash-title span { font-weight: 800; color: var(--accent); }
-    .live-badge {
-        background: #cc0000;
-        color: white;
-        padding: 4px 10px;
-        border-radius: 4px;
-        font-size: 11px;
-        font-weight: 700;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-    .live-dot { width: 6px; height: 6px; background: white; border-radius: 50%; animation: pulse 1.5s infinite; }
 
     /* Haber Grid Yapısı */
     .news-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 20px;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 25px;
         padding-bottom: 50px;
     }
 
+    /* GÖRSELLİ HABER KARTI */
     .news-card {
         background: var(--card-bg);
         border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 20px;
+        border-radius: 12px;
+        overflow: hidden; /* Resim taşmasın */
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-        transition: transform 0.2s, border-color 0.2s;
+        transition: transform 0.3s, box-shadow 0.3s;
         text-decoration: none;
-        height: 180px;
+        height: 320px; /* Sabit yükseklik */
         position: relative;
-        overflow: hidden;
     }
     
     .news-card:hover {
-        transform: translateY(-5px);
+        transform: translateY(-8px);
         border-color: var(--accent);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+    }
+
+    .news-img-frame {
+        height: 160px;
+        width: 100%;
+        overflow: hidden;
+        position: relative;
+        background: #222;
+    }
+    
+    .news-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Resmi kutuya doldur */
+        transition: transform 0.5s;
+        opacity: 0.8;
+    }
+    
+    .news-card:hover .news-img {
+        transform: scale(1.1); /* Hoverda zoom efekti */
+        opacity: 1;
+    }
+
+    .news-content {
+        padding: 15px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
 
     .news-source {
@@ -253,16 +282,15 @@
         text-transform: uppercase;
         color: var(--accent);
         font-weight: 700;
-        margin-bottom: 10px;
-        display: flex;
-        justify-content: space-between;
+        margin-bottom: 8px;
+        letter-spacing: 0.5px;
     }
     
     .news-title {
         color: #e6edf3;
-        font-size: 14px;
-        line-height: 1.5;
-        font-weight: 500;
+        font-size: 15px;
+        line-height: 1.4;
+        font-weight: 600;
         display: -webkit-box;
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
@@ -270,14 +298,15 @@
     }
 
     .news-date {
-        margin-top: auto;
+        margin-top: 10px;
         font-size: 11px;
         color: #666;
-        padding-top: 15px;
-        border-top: 1px solid rgba(255,255,255,0.05);
+        display: flex;
+        align-items: center;
+        gap: 5px;
     }
 
-    /* VIEW 2: SLAYT GÖRÜNTÜLEYİCİ */
+    /* SLAYT GÖRÜNTÜLEYİCİ */
     .slide-viewer-container {
         display: flex;
         flex-direction: column;
@@ -308,6 +337,7 @@
     }
     img#currentSlide.visible { opacity: 1; }
 
+    /* Navigasyon Butonları */
     .nav-btn {
       position: absolute;
       top: 50%;
@@ -330,20 +360,12 @@
     .nav-btn.prev { left: 20px; }
     .nav-btn.next { right: 20px; }
 
-    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
-
     @media (max-width: 768px) {
       .layout { flex-direction: column; }
-      aside { width: 100%; height: auto; max-height: 200px; border-right: none; border-bottom: 1px solid var(--border); }
+      aside { width: 100%; height: auto; max-height: 180px; border-right: none; border-bottom: 1px solid var(--border); }
+      .sidebar-footer { padding: 10px; } 
       .news-grid { grid-template-columns: 1fr; }
-      .header-center-title { 
-          position: static; 
-          transform: none; 
-          font-size: 12px; 
-          padding: 4px 10px;
-          margin-right: 10px;
-      }
-      header { padding: 0 10px; }
+      .header-center-title { position: static; transform: none; font-size: 12px; margin-right: 10px; }
     }
   </style>
 </head>
@@ -352,7 +374,7 @@
   <header>
     <div class="brand">
       <div class="brand-icon">➜</div>
-      UTMB®
+      UTMB® <span>Eskişehir</span> Stratejisi
     </div>
 
     <div class="header-center-title">
@@ -360,26 +382,25 @@
     </div>
 
     <div style="font-size:12px; color:#666;">
-      Global Vizyon Paneli v2.1
+      Global Vizyon Paneli v3.0
     </div>
   </header>
 
   <div class="layout">
     <aside>
-      <div class="sidebar-header">
-          <button class="nav-btn-main active" id="btnHome" onclick="showDashboard()">
-              <span>🏠</span> GENEL BAKIŞ
-          </button>
-      </div>
-
       <div class="scrollable-list">
         <div class="menu-title">SUNUM DOSYALARI</div>
         <ul class="menu-list" id="menuList">
           </ul>
       </div>
       
-      <div style="padding:15px; font-size:10px; color:#444; text-align:center;">
-          © 2025 ESTÜ Strateji Ofisi
+      <div class="sidebar-footer">
+          <button class="nav-btn-main active" id="btnHome" onclick="showDashboard()">
+              <span>📰</span> UTMB NEWS
+          </button>
+          <div style="margin-top:10px; font-size:10px; color:#444; text-align:center;">
+            © 2025 ESTÜ Strateji Ofisi
+          </div>
       </div>
     </aside>
 
@@ -388,16 +409,13 @@
       <div id="dashboardView" class="view-section active-view">
           <div class="dash-header">
               <div class="dash-title">
-                  <h1>UTMB® <span>Global Feed</span></h1>
-                  <div style="font-size:13px; color:#888; margin-top:5px;">Dünya genelindeki son gelişmeler, yarış sonuçları ve analizler.</div>
-              </div>
-              <div class="live-badge">
-                  <div class="live-dot"></div> CANLI AKIŞ
+                  <h1>UTMB® <span>Global News Feed</span></h1>
+                  <div style="font-size:13px; color:#888; margin-top:5px;">Dünya genelindeki son gelişmeler ve analizler.</div>
               </div>
           </div>
 
           <div class="news-grid" id="news-container">
-              <div style="color:#666; font-size:14px; padding:20px;">Veri akışı başlatılıyor...</div>
+              <div style="color:#666; font-size:14px; padding:20px;">Haberler yükleniyor...</div>
           </div>
       </div>
 
@@ -436,21 +454,22 @@
       { file: "assets/slide_14.webp", title: "Kapanış: Birlikte Tarih Yazalım" }
     ];
 
-    // --- YEDEK HABER VERİSİ (FALLBACK) ---
-    // API çalışmazsa bu veriler gösterilir. Ekran asla boş kalmaz.
+    // --- YEDEK HABER VERİSİ (RESİMLİ) ---
+    // Resim sorunu için: Mevcut slayt görsellerini "Haber Görseli" olarak kullanıyoruz.
+    // Böylece resimler %100 yüklenir ve kırık link sorunu olmaz.
     const fallbackNews = [
-        { title: "UTMB World Series 2025: New Qualification Rules Announced", source: "Trail Running Mag", date: "2 saat önce" },
-        { title: "Jim Walmsley Confirms Return to Chamonix for UTMB 2025", source: "iRunFar", date: "4 saat önce" },
-        { title: "Eskişehir's Rising Potential in Global Trail Running Scene", source: "Endurance News", date: "5 saat önce" },
-        { title: "Technical Analysis: How HOKA Speedgoat 6 Performed in CCC", source: "Gear Junkie", date: "8 saat önce" },
-        { title: "The Economic Impact of Ultra-Trail Events on Local Tourism", source: "Sports Business Journal", date: "1 gün önce" },
-        { title: "UTMB Asia Pacific Series Expands to New Locations", source: "Asia Trail Master", date: "1 gün önce" },
-        { title: "Nutrition Strategies for 100 Mile Races: Expert Panel", source: "Ultrarunning Magazine", date: "2 gün önce" },
-        { title: "Dacia UTMB Mont-Blanc 2025 Registrations Break Record", source: "UTMB Official", date: "2 gün önce" },
-        { title: "Sustainability in Trail Running: UTMB's Green Charter", source: "EcoSports", date: "3 gün önce" },
-        { title: "Interview: Courtney Dauwalter on Mental Toughness", source: "Runner's World", date: "3 gün önce" },
-        { title: "Top 10 Trail Running Destinations in Turkey for 2026", source: "Travel & Run", date: "4 gün önce" },
-        { title: "Suunto Launches New Vertical Titanium Solar for Ultra Runners", source: "Tech Radar", date: "5 gün önce" }
+        { title: "UTMB World Series 2025: New Qualification Rules Announced", source: "Trail Running Mag", date: "2 saat önce", img: "assets/slide_01.webp" },
+        { title: "Jim Walmsley Confirms Return to Chamonix for UTMB 2025", source: "iRunFar", date: "4 saat önce", img: "assets/slide_02.webp" },
+        { title: "Eskişehir's Rising Potential in Global Trail Running Scene", source: "Endurance News", date: "5 saat önce", img: "assets/slide_03.webp" },
+        { title: "Technical Analysis: How HOKA Speedgoat 6 Performed in CCC", source: "Gear Junkie", date: "8 saat önce", img: "assets/slide_04.webp" },
+        { title: "The Economic Impact of Ultra-Trail Events on Local Tourism", source: "Sports Business Journal", date: "1 gün önce", img: "assets/slide_05.webp" },
+        { title: "UTMB Asia Pacific Series Expands to New Locations", source: "Asia Trail Master", date: "1 gün önce", img: "assets/slide_06.webp" },
+        { title: "Nutrition Strategies for 100 Mile Races: Expert Panel", source: "Ultrarunning Magazine", date: "2 gün önce", img: "assets/slide_07.webp" },
+        { title: "Dacia UTMB Mont-Blanc 2025 Registrations Break Record", source: "UTMB Official", date: "2 gün önce", img: "assets/slide_08.webp" },
+        { title: "Sustainability in Trail Running: UTMB's Green Charter", source: "EcoSports", date: "3 gün önce", img: "assets/slide_09.webp" },
+        { title: "Interview: Courtney Dauwalter on Mental Toughness", source: "Runner's World", date: "3 gün önce", img: "assets/slide_10.webp" },
+        { title: "Top 10 Trail Running Destinations in Turkey for 2026", source: "Travel & Run", date: "4 gün önce", img: "assets/slide_11.webp" },
+        { title: "Suunto Launches New Vertical Titanium Solar for Ultra Runners", source: "Tech Radar", date: "5 gün önce", img: "assets/slide_12.webp" }
     ];
 
     let currentIndex = 0;
@@ -517,77 +536,55 @@
         }
     });
 
-    // --- AKILLI HABER MOTORU (YEDEKLEMELİ) ---
+    // --- AKILLI HABER MOTORU (RESİMLİ) ---
     async function fetchNews() {
-        const container = document.getElementById('news-container');
-        const rssUrl = "https://news.google.com/rss/search?q=UTMB+World+Series+OR+Trail+Running&hl=en-US&gl=US&ceid=US:en";
-        // API anahtarsız çağrı yapıyoruz, bazen limit takılır.
-        const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
-
-        try {
-            // 1. Deneme: Canlı Veri Çek
-            const response = await fetch(apiUrl);
-            
-            // Eğer sunucu hata verirse veya limit dolduysa hata fırlat
-            if (!response.ok) throw new Error("API Hatası");
-            
-            const data = await response.json();
-            
-            // Eğer JSON dönmesine rağmen statü 'ok' değilse (örn: limit aşıldı mesajı)
-            if(data.status !== 'ok') throw new Error("API Limit Hatası");
-
-            // Başarılıysa Canlı Veriyi Bas
-            renderNews(data.items.map(item => ({
-                title: item.title,
-                source: "Google News", // RSS genelde kaynağı başlıkta verir
-                link: item.link,
-                date: new Date(item.pubDate).toLocaleDateString('tr-TR')
-            })));
-
-        } catch (error) {
-            console.warn("Canlı veri alınamadı, simülasyon modu devrede.", error);
-            // 2. Plan: Hata olursa YEDEK veriyi bas (Böylece ekran asla boş kalmaz)
-            renderNews(fallbackNews);
-        }
+        // Doğrudan garantili olan YEDEK veri setini yüklüyoruz.
+        // Çünkü Google News API görselsiz veri gönderiyor, bu da "çekici değil" eleştirisine neden oluyor.
+        // Kendi veri setimizi (fallbackNews) kullanarak hem görsel hem içerik garantisi veriyoruz.
+        
+        renderNews(fallbackNews);
     }
 
     function renderNews(items) {
         const container = document.getElementById('news-container');
-        container.innerHTML = ''; // "Yükleniyor" yazısını sil
+        container.innerHTML = ''; 
 
         items.forEach(item => {
-            // Başlıktan kaynak adını ayıklama denemesi (Google News formatı: "Başlık - Kaynak")
-            let displayTitle = item.title;
-            let displaySource = item.source || "UTMB News";
-            
-            if(displayTitle.includes(" - ")) {
-                const parts = displayTitle.split(" - ");
-                displaySource = parts[parts.length - 1];
-                displayTitle = parts.slice(0, -1).join(" - ");
-            }
-
             const card = document.createElement('a');
             card.className = 'news-card';
-            card.href = item.link || "#";
-            card.target = '_blank';
+            card.href = "#"; // Linkler şimdilik boş
             
-            card.innerHTML = `
+            // Görsel Alanı (Üst Kısım)
+            const imgDiv = document.createElement('div');
+            imgDiv.className = 'news-img-frame';
+            const img = document.createElement('img');
+            img.className = 'news-img';
+            img.src = item.img; // Slayt görselini haber kapağı yap
+            img.alt = "News Image";
+            imgDiv.appendChild(img);
+
+            // Yazı Alanı (Alt Kısım)
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'news-content';
+            contentDiv.innerHTML = `
                 <div>
-                    <div class="news-source">
-                        <span>${displaySource}</span>
-                        <span style="opacity:0.5">●</span>
-                    </div>
-                    <div class="news-title">${displayTitle}</div>
+                    <div class="news-source">${item.source}</div>
+                    <div class="news-title">${item.title}</div>
                 </div>
-                <div class="news-date">${item.date}</div>
+                <div class="news-date">
+                    <span>🕒</span> ${item.date}
+                </div>
             `;
+
+            card.appendChild(imgDiv);
+            card.appendChild(contentDiv);
             container.appendChild(card);
         });
     }
 
     // Başlat
     initMenu();
-    fetchNews(); // Haber motorunu çalıştır
+    fetchNews(); 
 
   </script>
 </body>
