@@ -9,6 +9,7 @@
       --bg-dark: #090a0c;
       --sidebar-bg: #121418;
       --accent: #e94e1b; /* UTMB Turuncusu */
+      --accent-dark: #a8320d;
       --accent-glow: rgba(233, 78, 27, 0.4);
       --text-main: #ffffff;
       --text-muted: #8b949e;
@@ -46,7 +47,7 @@
       position: relative; 
     }
 
-    /* Logo Alanı - Düzeltildi */
+    /* Logo Alanı */
     .brand {
       font-weight: 800;
       font-size: 18px;
@@ -105,10 +106,9 @@
       flex-direction: column;
       flex-shrink: 0;
       z-index: 10;
-      justify-content: space-between; /* İçeriği yay, butonu alta it */
+      justify-content: space-between;
     }
 
-    /* Üst Menü Listesi */
     .scrollable-list {
       flex: 1;
       overflow-y: auto;
@@ -149,7 +149,6 @@
     }
     .menu-num { font-family: monospace; font-size: 11px; opacity: 0.5; min-width: 20px; }
 
-    /* ALT BUTON ALANI (Sol Altta) */
     .sidebar-footer {
         padding: 20px;
         border-top: 1px solid var(--border);
@@ -191,7 +190,6 @@
       overflow: hidden;
     }
 
-    /* VIEW SECTIONS */
     .view-section {
         position: absolute;
         top: 0; left: 0; width: 100%; height: 100%;
@@ -228,49 +226,55 @@
         padding-bottom: 50px;
     }
 
-    /* GÖRSELLİ HABER KARTI */
+    /* GÜVENLİ & SOYUT HABER KARTI */
     .news-card {
         background: var(--card-bg);
         border: 1px solid var(--border);
         border-radius: 12px;
-        overflow: hidden; /* Resim taşmasın */
+        overflow: hidden;
         display: flex;
         flex-direction: column;
         transition: transform 0.3s, box-shadow 0.3s;
         text-decoration: none;
-        height: 320px; /* Sabit yükseklik */
+        height: 280px; 
         position: relative;
     }
     
     .news-card:hover {
-        transform: translateY(-8px);
+        transform: translateY(-5px);
         border-color: var(--accent);
-        box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
 
-    .news-img-frame {
-        height: 160px;
+    /* Resim yerine modern soyut desen (Güvenli) */
+    .news-img-abstract {
+        height: 120px;
         width: 100%;
-        overflow: hidden;
+        /* UTMB Turuncusu ve Siyah ile oluşturulmuş modern gradyan */
+        background: linear-gradient(135deg, #1f242d 0%, #121418 100%);
         position: relative;
-        background: #222;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
     }
     
-    .news-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover; /* Resmi kutuya doldur */
-        transition: transform 0.5s;
-        opacity: 0.8;
+    /* İkon veya Desen */
+    .news-img-abstract::after {
+        content: '⚡'; /* Sembolik ikon */
+        font-size: 40px;
+        opacity: 0.2;
+        filter: grayscale(100%);
     }
-    
-    .news-card:hover .news-img {
-        transform: scale(1.1); /* Hoverda zoom efekti */
-        opacity: 1;
-    }
+
+    /* Alternatif Desenler için sınıflar (JS ile rastgele atanacak) */
+    .pattern-1 { background: radial-gradient(circle at 10% 20%, #2a1a15 0%, #121418 90%); }
+    .pattern-2 { background: linear-gradient(45deg, #181a1f 0%, #22252b 100%); }
+    .pattern-3 { background: linear-gradient(to bottom right, #1a0f0d, #121418); }
+
 
     .news-content {
-        padding: 15px;
+        padding: 20px;
         flex: 1;
         display: flex;
         flex-direction: column;
@@ -282,14 +286,14 @@
         text-transform: uppercase;
         color: var(--accent);
         font-weight: 700;
-        margin-bottom: 8px;
-        letter-spacing: 0.5px;
+        margin-bottom: 10px;
+        letter-spacing: 1px;
     }
     
     .news-title {
         color: #e6edf3;
         font-size: 15px;
-        line-height: 1.4;
+        line-height: 1.5;
         font-weight: 600;
         display: -webkit-box;
         -webkit-line-clamp: 3;
@@ -298,7 +302,7 @@
     }
 
     .news-date {
-        margin-top: 10px;
+        margin-top: 15px;
         font-size: 11px;
         color: #666;
         display: flex;
@@ -337,7 +341,6 @@
     }
     img#currentSlide.visible { opacity: 1; }
 
-    /* Navigasyon Butonları */
     .nav-btn {
       position: absolute;
       top: 50%;
@@ -382,7 +385,7 @@
     </div>
 
     <div style="font-size:12px; color:#666;">
-      Global Vizyon Paneli v3.0
+      Global Vizyon Paneli v3.1
     </div>
   </header>
 
@@ -415,8 +418,7 @@
           </div>
 
           <div class="news-grid" id="news-container">
-              <div style="color:#666; font-size:14px; padding:20px;">Haberler yükleniyor...</div>
-          </div>
+              </div>
       </div>
 
       <div id="slideView" class="view-section">
@@ -436,7 +438,7 @@
   </div>
 
   <script>
-    // --- VERİLER ---
+    // --- SLAYT VERİLERİ ---
     const slidesData = [
       { file: "assets/slide_01.webp", title: "Kapak: Vizyon ve Ortaklık" },
       { file: "assets/slide_02.webp", title: "UTMB® World Series Nedir?" }, 
@@ -454,22 +456,21 @@
       { file: "assets/slide_14.webp", title: "Kapanış: Birlikte Tarih Yazalım" }
     ];
 
-    // --- YEDEK HABER VERİSİ (RESİMLİ) ---
-    // Resim sorunu için: Mevcut slayt görsellerini "Haber Görseli" olarak kullanıyoruz.
-    // Böylece resimler %100 yüklenir ve kırık link sorunu olmaz.
+    // --- YEDEK HABER VERİSİ (SAFE MODE) ---
+    // Resim URL'leri kaldırıldı. Yerine CSS desenleri kullanılacak.
     const fallbackNews = [
-        { title: "UTMB World Series 2025: New Qualification Rules Announced", source: "Trail Running Mag", date: "2 saat önce", img: "assets/slide_01.webp" },
-        { title: "Jim Walmsley Confirms Return to Chamonix for UTMB 2025", source: "iRunFar", date: "4 saat önce", img: "assets/slide_02.webp" },
-        { title: "Eskişehir's Rising Potential in Global Trail Running Scene", source: "Endurance News", date: "5 saat önce", img: "assets/slide_03.webp" },
-        { title: "Technical Analysis: How HOKA Speedgoat 6 Performed in CCC", source: "Gear Junkie", date: "8 saat önce", img: "assets/slide_04.webp" },
-        { title: "The Economic Impact of Ultra-Trail Events on Local Tourism", source: "Sports Business Journal", date: "1 gün önce", img: "assets/slide_05.webp" },
-        { title: "UTMB Asia Pacific Series Expands to New Locations", source: "Asia Trail Master", date: "1 gün önce", img: "assets/slide_06.webp" },
-        { title: "Nutrition Strategies for 100 Mile Races: Expert Panel", source: "Ultrarunning Magazine", date: "2 gün önce", img: "assets/slide_07.webp" },
-        { title: "Dacia UTMB Mont-Blanc 2025 Registrations Break Record", source: "UTMB Official", date: "2 gün önce", img: "assets/slide_08.webp" },
-        { title: "Sustainability in Trail Running: UTMB's Green Charter", source: "EcoSports", date: "3 gün önce", img: "assets/slide_09.webp" },
-        { title: "Interview: Courtney Dauwalter on Mental Toughness", source: "Runner's World", date: "3 gün önce", img: "assets/slide_10.webp" },
-        { title: "Top 10 Trail Running Destinations in Turkey for 2026", source: "Travel & Run", date: "4 gün önce", img: "assets/slide_11.webp" },
-        { title: "Suunto Launches New Vertical Titanium Solar for Ultra Runners", source: "Tech Radar", date: "5 gün önce", img: "assets/slide_12.webp" }
+        { title: "UTMB World Series 2025: New Qualification Rules Announced", source: "Trail Running Mag", date: "2 saat önce" },
+        { title: "Jim Walmsley Confirms Return to Chamonix for UTMB 2025", source: "iRunFar", date: "4 saat önce" },
+        { title: "Eskişehir's Rising Potential in Global Trail Running Scene", source: "Endurance News", date: "5 saat önce" },
+        { title: "Technical Analysis: How HOKA Speedgoat 6 Performed in CCC", source: "Gear Junkie", date: "8 saat önce" },
+        { title: "The Economic Impact of Ultra-Trail Events on Local Tourism", source: "Sports Business Journal", date: "1 gün önce" },
+        { title: "UTMB Asia Pacific Series Expands to New Locations", source: "Asia Trail Master", date: "1 gün önce" },
+        { title: "Nutrition Strategies for 100 Mile Races: Expert Panel", source: "Ultrarunning Magazine", date: "2 gün önce" },
+        { title: "Dacia UTMB Mont-Blanc 2025 Registrations Break Record", source: "UTMB Official", date: "2 gün önce" },
+        { title: "Sustainability in Trail Running: UTMB's Green Charter", source: "EcoSports", date: "3 gün önce" },
+        { title: "Interview: Courtney Dauwalter on Mental Toughness", source: "Runner's World", date: "3 gün önce" },
+        { title: "Top 10 Trail Running Destinations in Turkey for 2026", source: "Travel & Run", date: "4 gün önce" },
+        { title: "Suunto Launches New Vertical Titanium Solar for Ultra Runners", source: "Tech Radar", date: "5 gün önce" }
     ];
 
     let currentIndex = 0;
@@ -536,12 +537,9 @@
         }
     });
 
-    // --- AKILLI HABER MOTORU (RESİMLİ) ---
+    // --- HABERLERİ RENDER ETME ---
     async function fetchNews() {
-        // Doğrudan garantili olan YEDEK veri setini yüklüyoruz.
-        // Çünkü Google News API görselsiz veri gönderiyor, bu da "çekici değil" eleştirisine neden oluyor.
-        // Kendi veri setimizi (fallbackNews) kullanarak hem görsel hem içerik garantisi veriyoruz.
-        
+        // Doğrudan güvenli modu (soyut desenli) başlatıyoruz.
         renderNews(fallbackNews);
     }
 
@@ -549,21 +547,18 @@
         const container = document.getElementById('news-container');
         container.innerHTML = ''; 
 
-        items.forEach(item => {
+        items.forEach((item, index) => {
             const card = document.createElement('a');
             card.className = 'news-card';
-            card.href = "#"; // Linkler şimdilik boş
+            card.href = "#"; 
             
-            // Görsel Alanı (Üst Kısım)
+            // Görsel yerine Soyut Desen (Güvenli)
             const imgDiv = document.createElement('div');
-            imgDiv.className = 'news-img-frame';
-            const img = document.createElement('img');
-            img.className = 'news-img';
-            img.src = item.img; // Slayt görselini haber kapağı yap
-            img.alt = "News Image";
-            imgDiv.appendChild(img);
-
-            // Yazı Alanı (Alt Kısım)
+            // Rastgele desen seçimi (tekdüze durmaması için)
+            const patternClass = index % 3 === 0 ? 'pattern-1' : (index % 3 === 1 ? 'pattern-2' : 'pattern-3');
+            imgDiv.className = `news-img-abstract ${patternClass}`;
+            
+            // Yazı Alanı
             const contentDiv = document.createElement('div');
             contentDiv.className = 'news-content';
             contentDiv.innerHTML = `
