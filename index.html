@@ -168,7 +168,7 @@
         justify-content: center;
         gap: 10px;
         font-weight: 800;
-        font-size: 14px;
+        font-size: 13px;
         letter-spacing: 0.5px;
         transition: 0.3s;
         box-shadow: 0 4px 15px rgba(233, 78, 27, 0.3);
@@ -208,107 +208,118 @@
         z-index: 5;
     }
 
-    /* Haber Başlığı */
+    /* Başlık */
     .dash-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 30px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 20px;
     }
     .dash-title h1 { margin: 0; font-size: 24px; font-weight: 300; }
     .dash-title span { font-weight: 800; color: var(--accent); }
+    
+    .stats-badge {
+        background: rgba(255,255,255,0.1);
+        padding: 5px 15px;
+        border-radius: 50px;
+        font-size: 12px;
+        color: #ccc;
+    }
 
-    /* Haber Grid Yapısı */
-    .news-grid {
+    /* UTMB EVENTS GRID */
+    .events-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-        gap: 25px;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
         padding-bottom: 50px;
     }
 
-    /* GÜVENLİ & SOYUT HABER KARTI */
-    .news-card {
+    /* YARIŞ KARTI */
+    .event-card {
         background: var(--card-bg);
         border: 1px solid var(--border);
-        border-radius: 12px;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        transition: transform 0.3s, box-shadow 0.3s;
-        text-decoration: none;
-        height: 280px; 
-        position: relative;
-    }
-    
-    .news-card:hover {
-        transform: translateY(-5px);
-        border-color: var(--accent);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-
-    /* Resim yerine modern soyut desen (Güvenli) */
-    .news-img-abstract {
-        height: 120px;
-        width: 100%;
-        /* UTMB Turuncusu ve Siyah ile oluşturulmuş modern gradyan */
-        background: linear-gradient(135deg, #1f242d 0%, #121418 100%);
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-    
-    /* İkon veya Desen */
-    .news-img-abstract::after {
-        content: '⚡'; /* Sembolik ikon */
-        font-size: 40px;
-        opacity: 0.2;
-        filter: grayscale(100%);
-    }
-
-    /* Alternatif Desenler için sınıflar (JS ile rastgele atanacak) */
-    .pattern-1 { background: radial-gradient(circle at 10% 20%, #2a1a15 0%, #121418 90%); }
-    .pattern-2 { background: linear-gradient(45deg, #181a1f 0%, #22252b 100%); }
-    .pattern-3 { background: linear-gradient(to bottom right, #1a0f0d, #121418); }
-
-
-    .news-content {
+        border-radius: 10px;
         padding: 20px;
-        flex: 1;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-    }
-
-    .news-source {
-        font-size: 10px;
-        text-transform: uppercase;
-        color: var(--accent);
-        font-weight: 700;
-        margin-bottom: 10px;
-        letter-spacing: 1px;
-    }
-    
-    .news-title {
-        color: #e6edf3;
-        font-size: 15px;
-        line-height: 1.5;
-        font-weight: 600;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
+        transition: transform 0.2s, border-color 0.2s;
+        height: 160px;
+        position: relative;
         overflow: hidden;
     }
+    
+    .event-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--accent);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+    
+    /* Kartın arkasına hafif bir UTMB logosu (dekoratif) */
+    .event-card::before {
+        content: '⛰';
+        position: absolute;
+        right: -10px;
+        bottom: -20px;
+        font-size: 100px;
+        opacity: 0.03;
+        color: white;
+    }
 
-    .news-date {
-        margin-top: 15px;
-        font-size: 11px;
-        color: #666;
+    .event-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+    
+    .event-flag {
+        font-size: 24px;
+        background: rgba(255,255,255,0.05);
+        width: 40px;
+        height: 40px;
         display: flex;
         align-items: center;
-        gap: 5px;
+        justify-content: center;
+        border-radius: 8px;
     }
+
+    .event-series-tag {
+        font-size: 9px;
+        text-transform: uppercase;
+        background: var(--accent);
+        color: white;
+        padding: 3px 6px;
+        border-radius: 4px;
+        font-weight: 700;
+    }
+
+    .event-title {
+        color: white;
+        font-size: 16px;
+        font-weight: 700;
+        margin-top: 15px;
+        line-height: 1.3;
+    }
+
+    .event-location {
+        color: var(--text-muted);
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+    .event-date {
+        margin-top: auto;
+        padding-top: 15px;
+        font-size: 12px;
+        color: var(--accent);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
 
     /* SLAYT GÖRÜNTÜLEYİCİ */
     .slide-viewer-container {
@@ -341,6 +352,7 @@
     }
     img#currentSlide.visible { opacity: 1; }
 
+    /* Navigasyon Butonları */
     .nav-btn {
       position: absolute;
       top: 50%;
@@ -367,8 +379,9 @@
       .layout { flex-direction: column; }
       aside { width: 100%; height: auto; max-height: 180px; border-right: none; border-bottom: 1px solid var(--border); }
       .sidebar-footer { padding: 10px; } 
-      .news-grid { grid-template-columns: 1fr; }
+      .events-grid { grid-template-columns: 1fr; }
       .header-center-title { position: static; transform: none; font-size: 12px; margin-right: 10px; }
+      .dash-title h1 { font-size: 18px; }
     }
   </style>
 </head>
@@ -385,7 +398,7 @@
     </div>
 
     <div style="font-size:12px; color:#666;">
-      Global Vizyon Paneli v3.1
+      v4.0 Final
     </div>
   </header>
 
@@ -399,7 +412,7 @@
       
       <div class="sidebar-footer">
           <button class="nav-btn-main active" id="btnHome" onclick="showDashboard()">
-              <span>📰</span> UTMB NEWS
+              <span>🌍</span> KÜRESEL TAKVİM
           </button>
           <div style="margin-top:10px; font-size:10px; color:#444; text-align:center;">
             © 2025 ESTÜ Strateji Ofisi
@@ -412,12 +425,15 @@
       <div id="dashboardView" class="view-section active-view">
           <div class="dash-header">
               <div class="dash-title">
-                  <h1>UTMB® <span>Global News Feed</span></h1>
-                  <div style="font-size:13px; color:#888; margin-top:5px;">Dünya genelindeki son gelişmeler ve analizler.</div>
+                  <h1>UTMB® <span>World Series Calendar</span></h1>
+                  <div style="font-size:13px; color:#888; margin-top:5px;">Dünyanın en prestijli ultra maraton serisi ve etkinlik takvimi.</div>
+              </div>
+              <div class="stats-badge">
+                 43+ ETKİNLİK
               </div>
           </div>
 
-          <div class="news-grid" id="news-container">
+          <div class="events-grid" id="events-container">
               </div>
       </div>
 
@@ -456,21 +472,28 @@
       { file: "assets/slide_14.webp", title: "Kapanış: Birlikte Tarih Yazalım" }
     ];
 
-    // --- YEDEK HABER VERİSİ (SAFE MODE) ---
-    // Resim URL'leri kaldırıldı. Yerine CSS desenleri kullanılacak.
-    const fallbackNews = [
-        { title: "UTMB World Series 2025: New Qualification Rules Announced", source: "Trail Running Mag", date: "2 saat önce" },
-        { title: "Jim Walmsley Confirms Return to Chamonix for UTMB 2025", source: "iRunFar", date: "4 saat önce" },
-        { title: "Eskişehir's Rising Potential in Global Trail Running Scene", source: "Endurance News", date: "5 saat önce" },
-        { title: "Technical Analysis: How HOKA Speedgoat 6 Performed in CCC", source: "Gear Junkie", date: "8 saat önce" },
-        { title: "The Economic Impact of Ultra-Trail Events on Local Tourism", source: "Sports Business Journal", date: "1 gün önce" },
-        { title: "UTMB Asia Pacific Series Expands to New Locations", source: "Asia Trail Master", date: "1 gün önce" },
-        { title: "Nutrition Strategies for 100 Mile Races: Expert Panel", source: "Ultrarunning Magazine", date: "2 gün önce" },
-        { title: "Dacia UTMB Mont-Blanc 2025 Registrations Break Record", source: "UTMB Official", date: "2 gün önce" },
-        { title: "Sustainability in Trail Running: UTMB's Green Charter", source: "EcoSports", date: "3 gün önce" },
-        { title: "Interview: Courtney Dauwalter on Mental Toughness", source: "Runner's World", date: "3 gün önce" },
-        { title: "Top 10 Trail Running Destinations in Turkey for 2026", source: "Travel & Run", date: "4 gün önce" },
-        { title: "Suunto Launches New Vertical Titanium Solar for Ultra Runners", source: "Tech Radar", date: "5 gün önce" }
+    // --- GLOBAL UTMB VERİLERİ (STATİK & DOĞRU) ---
+    const utmbEvents = [
+        { name: "Dacia UTMB® Mont-Blanc", location: "Chamonix, Fransa 🇫🇷", date: "Ağustos Sonu", tag: "FINALS" },
+        { name: "Western States™ 100", location: "California, ABD 🇺🇸", date: "Haziran", tag: "MAJOR" },
+        { name: "La Sportiva® Lavaredo Ultra Trail", location: "Cortina, İtalya 🇮🇹", date: "Haziran", tag: "SERIES" },
+        { name: "Transvulcania by UTMB®", location: "La Palma, İspanya 🇪🇸", date: "Mayıs", tag: "SERIES" },
+        { name: "Tarawera Ultra-Trail by UTMB®", location: "Rotorua, Yeni Zelanda 🇳🇿", date: "Şubat", tag: "SERIES" },
+        { name: "Doi Inthanon Thailand by UTMB®", location: "Chiang Mai, Tayland 🇹🇭", date: "Aralık", tag: "MAJOR" },
+        { name: "Val d'Aran by UTMB®", location: "Pyrenees, İspanya 🇪🇸", date: "Temmuz", tag: "MAJOR" },
+        { name: "Nice Côte d'Azur by UTMB®", location: "Nice, Fransa 🇫🇷", date: "Eylül", tag: "SERIES" },
+        { name: "Eiger Ultra-Trail™ by UTMB®", location: "Grindelwald, İsviçre 🇨🇭", date: "Temmuz", tag: "SERIES" },
+        { name: "Cappadocia Ultra-Trail®", location: "Nevşehir, Türkiye 🇹🇷", date: "Ekim", tag: "EVENT" },
+        { name: "Kodiak Ultra Marathons™ by UTMB®", location: "Big Bear Lake, ABD 🇺🇸", date: "Ekim", tag: "SERIES" },
+        { name: "Puerto Vallarta México by UTMB®", location: "Jalisco, Meksika 🇲🇽", date: "Kasım", tag: "SERIES" },
+        { name: "Ultra-Trail Snowdonia by UTMB®", location: "Wales, Birleşik Krallık 🇬🇧", date: "Mayıs", tag: "SERIES" },
+        { name: "Mozart 100™ by UTMB®", location: "Salzburg, Avusturya 🇦🇹", date: "Haziran", tag: "SERIES" },
+        { name: "Istria 100™ by UTMB®", location: "Umag, Hırvatistan 🇭🇷", date: "Nisan", tag: "SERIES" },
+        { name: "Wildstrubel by UTMB®", location: "Crans-Montana, İsviçre 🇨🇭", date: "Eylül", tag: "SERIES" },
+        { name: "Julian Alps Trail Run by UTMB®", location: "Kranjska Gora, Slovenya 🇸🇮", date: "Eylül", tag: "SERIES" },
+        { name: "Speedgoat™ Mountain Races", location: "Utah, ABD 🇺🇸", date: "Temmuz", tag: "SERIES" },
+        { name: "Paraty Brazil by UTMB®", location: "Paraty, Brezilya 🇧🇷", date: "Eylül", tag: "SERIES" },
+        { name: "Ultra-Trail Kosciuszko™ by UTMB®", location: "NSW, Avustralya 🇦🇺", date: "Aralık", tag: "SERIES" }
     ];
 
     let currentIndex = 0;
@@ -537,49 +560,46 @@
         }
     });
 
-    // --- HABERLERİ RENDER ETME ---
-    async function fetchNews() {
-        // Doğrudan güvenli modu (soyut desenli) başlatıyoruz.
-        renderNews(fallbackNews);
-    }
-
-    function renderNews(items) {
-        const container = document.getElementById('news-container');
+    // --- ETKİNLİKLERİ YÜKLE ---
+    function renderEvents() {
+        const container = document.getElementById('events-container');
         container.innerHTML = ''; 
 
-        items.forEach((item, index) => {
-            const card = document.createElement('a');
-            card.className = 'news-card';
-            card.href = "#"; 
+        utmbEvents.forEach(event => {
+            const card = document.createElement('div');
+            card.className = 'event-card';
             
-            // Görsel yerine Soyut Desen (Güvenli)
-            const imgDiv = document.createElement('div');
-            // Rastgele desen seçimi (tekdüze durmaması için)
-            const patternClass = index % 3 === 0 ? 'pattern-1' : (index % 3 === 1 ? 'pattern-2' : 'pattern-3');
-            imgDiv.className = `news-img-abstract ${patternClass}`;
-            
-            // Yazı Alanı
-            const contentDiv = document.createElement('div');
-            contentDiv.className = 'news-content';
-            contentDiv.innerHTML = `
-                <div>
-                    <div class="news-source">${item.source}</div>
-                    <div class="news-title">${item.title}</div>
+            // Bayrağı bul (Basit emoji ayrıştırma)
+            const flag = event.location.match(/[\uD83C][\uDDE6-\uDDFF][\uD83C][\uDDE6-\uDDFF]/) || "🚩";
+
+            card.innerHTML = `
+                <div class="event-header">
+                    <div class="event-flag">${flag}</div>
+                    <div class="event-series-tag" style="background:${getTagColor(event.tag)}">${event.tag}</div>
                 </div>
-                <div class="news-date">
-                    <span>🕒</span> ${item.date}
+                <div>
+                    <div class="event-title">${event.name}</div>
+                    <div class="event-location">${event.location.replace(flag, '').trim()}</div>
+                </div>
+                <div class="event-date">
+                    <span>📅</span> ${event.date}
                 </div>
             `;
-
-            card.appendChild(imgDiv);
-            card.appendChild(contentDiv);
             container.appendChild(card);
         });
     }
 
+    function getTagColor(tag) {
+        if(tag === 'FINALS') return '#e94e1b'; // Turuncu
+        if(tag === 'MAJOR') return '#d93a10'; // Koyu Turuncu
+        if(tag === 'SERIES') return '#333';   // Gri
+        if(tag === 'EVENT') return '#cc0000'; // Kırmızı (Türkiye için vurgu)
+        return '#444';
+    }
+
     // Başlat
     initMenu();
-    fetchNews(); 
+    renderEvents();
 
   </script>
 </body>
