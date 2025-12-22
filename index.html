@@ -8,7 +8,7 @@
     :root {
       --bg-dark: #0f1115;
       --sidebar-bg: #161b22;
-      --accent: #e94e1b; /* UTMB Turuncusu */
+      --accent: #e94e1b;
       --text-main: #e6edf3;
       --text-muted: #8b949e;
       --border: #30363d;
@@ -28,7 +28,7 @@
       overflow: hidden;
     }
 
-    /* --- ÜST HEADER --- */
+    /* --- HEADER --- */
     header {
       height: 60px;
       background: var(--sidebar-bg);
@@ -49,14 +49,14 @@
     }
     .brand span { color: var(--accent); }
 
-    /* --- ANA YERLEŞİM (LAYOUT) --- */
+    /* --- LAYOUT --- */
     .layout {
       display: flex;
       flex: 1;
-      height: calc(100vh - 60px); /* Header hariç kalan alan */
+      height: calc(100vh - 60px);
     }
 
-    /* --- SOL MENÜ (SIDEBAR) --- */
+    /* --- SIDEBAR --- */
     aside {
       width: 280px;
       background: var(--sidebar-bg);
@@ -100,13 +100,13 @@
     }
 
     .menu-item.active {
-      background: rgba(233, 78, 27, 0.1); /* Hafif turuncu fon */
+      background: rgba(233, 78, 27, 0.1);
       border-left-color: var(--accent);
       color: var(--text-main);
       font-weight: 500;
     }
 
-    /* --- SAĞ İÇERİK ALANI --- */
+    /* --- MAIN CONTENT --- */
     main {
       flex: 1;
       background: var(--bg-dark);
@@ -142,7 +142,6 @@
     }
     img#currentSlide.visible { opacity: 1; }
 
-    /* Navigasyon Butonları (Resmin üzerinde) */
     .nav-btn {
       position: absolute;
       top: 50%;
@@ -164,7 +163,6 @@
     .nav-btn.prev { left: 10px; }
     .nav-btn.next { right: 10px; }
 
-    /* Alt Bilgi Barı */
     .info-bar {
       margin-top: 10px;
       display: flex;
@@ -173,13 +171,12 @@
       font-size: 13px;
     }
 
-    /* --- MOBİL UYUMLULUK --- */
     @media (max-width: 768px) {
       .layout { flex-direction: column; }
       aside { 
         width: 100%; 
         height: auto; 
-        max-height: 150px; /* Mobilde üstte kaydırılabilir menü olsun */
+        max-height: 150px;
         flex-direction: row; 
         overflow-x: auto; 
         border-right: none;
@@ -212,32 +209,32 @@
       
       <div class="menu-title" style="margin-top:20px;">DÖKÜMANLAR</div>
       <ul class="menu-list">
-        <li class="menu-item" onclick="alert('PDF indirme özelliği eklenebilir.')">📄 Proje Özeti (PDF)</li>
-        <li class="menu-item" onclick="alert('Henüz aktif değil.')">📊 Bütçe Tablosu</li>
+        <li class="menu-item" onclick="alert('PDF Özeti yakında eklenecek.')">📄 Proje Özeti (PDF)</li>
+        <li class="menu-item" onclick="alert('Bütçe Tablosu yakında eklenecek.')">📊 Bütçe Tablosu</li>
       </ul>
     </aside>
 
     <main>
       <div class="viewer-frame">
-        <button class="nav-btn prev" onclick="prevSlide()">❮</button>
+        <button class="nav-btn prev" id="btnPrev">❮</button>
         <img id="currentSlide" src="" alt="Sunum">
-        <button class="nav-btn next" onclick="nextSlide()">❯</button>
+        <button class="nav-btn next" id="btnNext">❯</button>
       </div>
       
       <div class="info-bar">
-        <span id="slideCounter">Sayfa 1 / 8</span>
+        <span id="slideCounter"></span>
         <span>|</span>
-        <span id="slideName">Genel Bakış</span>
+        <span id="slideName"></span>
       </div>
     </main>
   </div>
 
   <script>
-    // --- VERİ YAPISI ---
-    // Sol menüde ne yazacağını ve hangi resme gideceğini buradan yönetiyoruz.
+    // --- KONFIGÜRASYON ---
+    // Resimlerin "assets" klasöründe olduğunu varsayıyoruz.
     const slidesData = [
       { file: "assets/slide_01.webp", title: "Kapak: Vizyon ve Ortaklık" },
-      { file: "assets/slide_02.jpg",  title: "UTMB® World Series Nedir?" }, // JPG
+      { file: "assets/slide_02.jpg",  title: "UTMB® World Series Nedir?" }, 
       { file: "assets/slide_03.webp", title: "Ekonomik Etki ve Turizm" },
       { file: "assets/slide_04.webp", title: "Operasyonel Karmaşıklık" },
       { file: "assets/slide_05.webp", title: "Yetenek Ekosistemi" },
@@ -252,7 +249,7 @@
     const counterEl = document.getElementById('slideCounter');
     const nameEl = document.getElementById('slideName');
 
-    // Başlangıçta menüyü oluştur
+    // Menüyü oluştur
     function initMenu() {
       menuListEl.innerHTML = "";
       slidesData.forEach((slide, index) => {
@@ -270,29 +267,34 @@
       
       currentIndex = index;
       
-      // Görsel geçiş efekti için opacity sıfırla
+      // Animasyon için opacity sıfırla
       imgEl.classList.remove('visible');
       
+      // Kısa bir gecikmeyle resmi yükle (geçiş efekti)
       setTimeout(() => {
-        imgEl.src = slide.file; // Aşağıda tanımlı slide değişkenini kullanmak için düzeltme:
+        // HATA DUZELTİLDİ: Artık doğru değişkeni kullanıyoruz
         imgEl.src = slidesData[currentIndex].file;
         
         imgEl.onload = () => {
           imgEl.classList.add('visible');
           updateUI();
         };
+        
+        imgEl.onerror = () => {
+           console.error("Resim yüklenemedi:", slidesData[currentIndex].file);
+        };
       }, 150);
     }
 
     function updateUI() {
-      // Menüdeki aktif sınıfını güncelle
+      // Menüde aktif olanı işaretle
       const items = document.querySelectorAll('.menu-item');
       items.forEach((item, i) => {
         if (i === currentIndex) item.classList.add('active');
         else item.classList.remove('active');
       });
 
-      // Alt bilgi güncelle
+      // Alt bilgileri güncelle
       counterEl.innerText = `Sayfa ${currentIndex + 1} / ${slidesData.length}`;
       nameEl.innerText = slidesData[currentIndex].title;
     }
@@ -300,7 +302,11 @@
     function nextSlide() { loadSlide(currentIndex + 1); }
     function prevSlide() { loadSlide(currentIndex - 1); }
 
-    // Klavye Desteği
+    // Buton tıklamaları
+    document.getElementById('btnNext').onclick = nextSlide;
+    document.getElementById('btnPrev').onclick = prevSlide;
+
+    // Klavye kontrolleri
     document.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowRight') nextSlide();
       if (e.key === 'ArrowLeft') prevSlide();
