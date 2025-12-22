@@ -33,6 +33,7 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      touch-action: none; /* Mobilde zoom/pan için kritik */
     }
 
     /* --- HEADER --- */
@@ -44,10 +45,11 @@
       align-items: center;
       padding: 0 24px;
       padding-top: var(--safe-area-top); 
-      justify-content: space-between; /* İki uca yasla */
+      justify-content: space-between;
       flex-shrink: 0;
       z-index: 30;
       position: relative; 
+      transition: height 0.3s ease;
     }
 
     .brand {
@@ -58,8 +60,8 @@
       gap: 12px;
       letter-spacing: -0.5px;
       color: white;
-      white-space: nowrap; /* Logo taşmasın */
-      z-index: 50; /* Logoyu öne al */
+      white-space: nowrap;
+      z-index: 50;
     }
     .brand-icon {
         width: 24px;
@@ -74,9 +76,9 @@
     }
     .brand span { color: var(--accent); }
 
-    /* ORTA İSİM ALANI (Varsayılan: PC Ayarları) */
+    /* ORTA İSİM ALANI */
     .header-center-title {
-        position: absolute; /* PC'de ortada dursun */
+        position: absolute;
         left: 50%;
         transform: translateX(-50%);
         font-weight: 900;
@@ -124,15 +126,6 @@
     }
     .scrollable-list::-webkit-scrollbar { width: 0px; background: transparent; }
 
-    .menu-title {
-      padding: 0 10px 10px;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      color: var(--text-muted);
-      font-weight: 700;
-    }
-
     .menu-list { list-style: none; padding: 0; margin: 0; }
 
     .menu-item {
@@ -160,8 +153,12 @@
         padding: 20px;
         border-top: 1px solid var(--border);
         background: rgba(0,0,0,0.2);
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
     }
 
+    /* BUTONLAR */
     .nav-btn-main {
         width: 100%;
         background: linear-gradient(45deg, #cc4416, #e94e1b);
@@ -179,12 +176,39 @@
         letter-spacing: 0.5px;
         transition: 0.2s;
         box-shadow: 0 4px 15px rgba(233, 78, 27, 0.3);
+        position: relative;
+        overflow: hidden;
     }
     .nav-btn-main:active { transform: scale(0.96); }
     .nav-btn-main:not(.active) {
         background: rgba(255,255,255,0.05);
         box-shadow: none;
         border: 1px solid var(--border);
+        opacity: 0.8;
+    }
+    .nav-btn-main.active {
+        opacity: 1;
+        box-shadow: 0 4px 15px rgba(233, 78, 27, 0.4);
+        border: 1px solid var(--accent);
+    }
+
+    /* LIVE BADGE ANIMASYONU */
+    @keyframes blinkLive {
+        0% { opacity: 1; text-shadow: 0 0 5px red; }
+        50% { opacity: 0.4; text-shadow: none; }
+        100% { opacity: 1; text-shadow: 0 0 5px red; }
+    }
+    .live-badge {
+        background: #ff0000;
+        color: white;
+        font-size: 9px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        margin-left: 5px;
+        animation: blinkLive 1.5s infinite ease-in-out;
+        font-weight: 900;
+        letter-spacing: 1px;
+        display: inline-block;
     }
 
     /* --- MAIN CONTENT --- */
@@ -257,7 +281,7 @@
     .event-location { color: var(--text-muted); font-size: 12px; margin-top: 2px; }
     .event-date { margin-top: auto; font-size: 11px; color: var(--accent); font-weight: 600; display: flex; align-items: center; gap: 5px; }
 
-    /* SLAYT GÖRÜNTÜLEYİCİ */
+    /* SLAYT GÖRÜNTÜLEYİCİ - ZOOM UPDATE */
     .slide-viewer-container {
         display: flex;
         flex-direction: column;
@@ -266,26 +290,35 @@
         height: 100%;
         width: 100%;
         position: relative;
+        overflow: hidden;
     }
 
     .viewer-frame {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        cursor: grab;
     }
+    .viewer-frame:active { cursor: grabbing; }
 
     img#currentSlide {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        transform-origin: center center;
+        user-select: none;
+        -webkit-user-drag: none;
+        will-change: transform;
     }
-    img#currentSlide.visible { opacity: 1; }
+
+    /* Slayt Bilgisi (Rozet) */
+    .slide-info-text {
+        margin-top: 20px; color: #555; font-size: 12px; text-align: center;
+    }
 
     .nav-btn {
       position: absolute;
@@ -311,24 +344,13 @@
     @media (max-width: 768px) {
       .layout { flex-direction: column; }
       header { padding: 0 15px; height: 50px; }
+      .brand { font-size: 14px; max-width: 60%; overflow:hidden; }
       
-      .brand { 
-          font-size: 14px; 
-          max-width: 60%; /* Logonun isme çarpmaması için sınır */
-          overflow: hidden;
-      }
-      
-      /* MOBİLDE İSİM SAĞA GEÇER (ÇAKIŞMAYI ÖNLEYEN KOD) */
+      /* İsim Sağda (Mobilde Çakışma Önlemi) */
       .header-center-title { 
-          display: block !important; 
-          position: static; /* Sabitlemeyi kaldır */
-          transform: none; /* Dönüştürmeyi kaldır */
-          font-size: 10px; 
-          padding: 2px 10px; 
-          border-width: 1px;
-          margin-left: auto; /* En sağa it */
+          display: block !important; position: static; transform: none; 
+          font-size: 10px; padding: 2px 10px; border-width: 1px; margin-left: auto;
       }
-      
       .version-text { display: none; }
 
       aside {
@@ -337,10 +359,12 @@
       }
 
       .sidebar-footer {
-          padding: 5px 10px; border-top: none; background: transparent; display: flex;
-          justify-content: space-between; align-items: center; width: 100%; order: 1; 
+          padding: 5px 10px; border-top: none; background: transparent; 
+          flex-direction: row; 
+          gap: 8px;
+          order: 1; 
       }
-      .nav-btn-main { padding: 8px; font-size: 12px; width: auto; flex: 1; }
+      .nav-btn-main { padding: 8px; font-size: 11px; flex: 1; justify-content: center; }
       
       .scrollable-list {
         display: flex; flex-direction: row; overflow-x: auto; padding: 5px 10px; gap: 8px;
@@ -359,6 +383,40 @@
       .nav-btn { display: none; } 
       .slide-viewer-container { justify-content: flex-start; padding-top: 20px; }
     }
+
+    /* --- MOBILE LANDSCAPE FIX (S23 Ultra vb.) --- */
+    @media (max-height: 600px) and (orientation: landscape) {
+        header { height: 40px !important; padding: 0 15px; }
+        .brand { font-size: 13px; }
+        .header-center-title { font-size: 9px; padding: 1px 8px; }
+        
+        /* Listeyi ve Butonları Gizle (Sinema Modu) */
+        .scrollable-list { display: none !important; }
+        .sidebar-footer { display: none !important; }
+        aside { height: 0; padding: 0; overflow: hidden; border: none; }
+
+        .view-section { 
+            padding: 0 !important; 
+            padding-bottom: 0 !important; 
+            transform: none !important;
+            height: 100vh;
+        }
+        
+        .slide-viewer-container {
+            justify-content: center !important;
+            padding-top: 0 !important;
+            height: 100%;
+        }
+
+        .viewer-frame { width: 100%; height: 100%; align-items: center; }
+        img#currentSlide { max-height: 98vh; width: auto; max-width: 100%; }
+
+        .slide-info-text {
+            position: absolute; bottom: 10px; right: 10px; margin: 0;
+            background: rgba(0,0,0,0.6); color: white; padding: 4px 10px;
+            border-radius: 12px; font-size: 10px; z-index: 20; pointer-events: none;
+        }
+    }
   </style>
 </head>
 <body>
@@ -368,12 +426,10 @@
       <div class="brand-icon">➜</div>
       UTMB® <span>Eskişehir</span>
     </div>
-
     <div class="header-center-title">
         ALİ <span>GÜÇLÜ</span>
     </div>
-
-    <div class="version-text">v5.4 Fixed</div>
+    <div class="version-text">v7.0 Final</div>
   </header>
 
   <div class="layout">
@@ -382,11 +438,14 @@
           <button class="nav-btn-main" id="btnHome" onclick="showDashboard()">
               <span>🌍</span> KÜRESEL TAKVİM
           </button>
+          
+          <button class="nav-btn-main" id="btnPodcast" onclick="togglePodcast()">
+              <span>🎙️</span> PROJE PODCAST <span class="live-badge">LIVE</span>
+          </button>
       </div>
 
       <div class="scrollable-list" style="order: 2;">
-        <ul class="menu-list" id="menuList" style="display:contents;">
-          </ul>
+        <ul class="menu-list" id="menuList" style="display:contents;"></ul>
       </div>
     </aside>
 
@@ -394,15 +453,16 @@
       
       <div id="slideView" class="view-section active-view">
           <div class="slide-viewer-container">
-            <div class="viewer-frame">
+            <div class="viewer-frame" id="zoomContainer">
                 <button class="nav-btn prev" id="btnPrev">❮</button>
                 <img id="currentSlide" src="" alt="Sunum">
                 <button class="nav-btn next" id="btnNext">❯</button>
             </div>
-            <div style="margin-top:20px; color:#555; font-size:12px; text-align:center;">
+            
+            <div class="slide-info-text">
                 <span id="slideCounter"></span><br>
                 <span id="slideName" style="color:#aaa;"></span>
-                <div style="margin-top:5px; font-size:10px; opacity:0.5;">(Kaydırmak için sürükleyin)</div>
+                <div style="margin-top:2px; font-size:9px; opacity:0.6;">(Çift tıkla Zoom • Kaydır)</div>
             </div>
           </div>
       </div>
@@ -419,6 +479,8 @@
 
     </main>
   </div>
+
+  <audio id="audioPlayer" src="assets/slide_03_audio.m4a" preload="auto"></audio>
 
   <script>
     // --- VERİLER ---
@@ -445,7 +507,7 @@
         { name: "La Sportiva® Lavaredo", location: "Cortina, İtalya 🇮🇹", date: "Haziran", tag: "MAJOR" },
         { name: "Doi Inthanon Thailand", location: "Tayland 🇹🇭", date: "Aralık", tag: "MAJOR" },
         { name: "Cappadocia Ultra-Trail®", location: "Türkiye 🇹🇷", date: "Ekim", tag: "EVENT" },
-        { name: "Transvulcania by UTMB®", location: "La Palma, İspanya 🇪🇸", date: "Mayıs", tag: "SERIES" },
+        { name: "Transvulcania by UTMB®", location: "İspanya 🇪🇸", date: "Mayıs", tag: "SERIES" },
         { name: "Tarawera Ultra-Trail", location: "Yeni Zelanda 🇳🇿", date: "Şubat", tag: "SERIES" },
         { name: "Val d'Aran by UTMB®", location: "İspanya 🇪🇸", date: "Temmuz", tag: "SERIES" },
         { name: "Nice Côte d'Azur", location: "Fransa 🇫🇷", date: "Eylül", tag: "SERIES" },
@@ -484,13 +546,17 @@
     const dashView = document.getElementById('dashboardView');
     const slideView = document.getElementById('slideView');
     const btnHome = document.getElementById('btnHome');
+    const btnPodcast = document.getElementById('btnPodcast');
+    const audioPlayer = document.getElementById('audioPlayer');
+    const zoomContainer = document.getElementById('zoomContainer');
 
     // --- NAVİGASYON ---
     function showDashboard() {
         slideView.classList.remove('active-view');
         dashView.classList.add('active-view');
         document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
-        btnHome.classList.add('active'); // Butonu aktif yap
+        btnHome.classList.add('active'); 
+        resetZoom(); 
     }
 
     function showSlideViewer(index) {
@@ -500,7 +566,9 @@
 
         dashView.classList.remove('active-view');
         slideView.classList.add('active-view');
-        btnHome.classList.remove('active'); // Butonu pasif yap
+        btnHome.classList.remove('active'); 
+
+        resetZoom();
 
         imgEl.classList.remove('visible');
         setTimeout(() => {
@@ -536,39 +604,131 @@
         });
     }
 
-    document.getElementById('btnNext').onclick = () => showSlideViewer(currentIndex + 1);
-    document.getElementById('btnPrev').onclick = () => showSlideViewer(currentIndex - 1);
+    document.getElementById('btnNext').onclick = (e) => { e.stopPropagation(); showSlideViewer(currentIndex + 1); };
+    document.getElementById('btnPrev').onclick = (e) => { e.stopPropagation(); showSlideViewer(currentIndex - 1); };
 
-    // --- SWIPE ---
-    let touchStartX = 0;
-    let touchEndX = 0;
-    const swipeArea = document.getElementById('slideView');
-
-    swipeArea.addEventListener('touchstart', e => {
-        touchStartX = e.changedTouches[0].screenX;
-    }, {passive: true});
-
-    swipeArea.addEventListener('touchend', e => {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
-    }, {passive: true});
-
-    function handleSwipe() {
-        const sensitivity = 50; 
-        if (touchEndX < touchStartX - sensitivity) showSlideViewer(currentIndex + 1);
-        if (touchEndX > touchStartX + sensitivity) showSlideViewer(currentIndex - 1);
+    // --- PODCAST OYNATICI ---
+    function togglePodcast() {
+        if (audioPlayer.paused) {
+            audioPlayer.play();
+            btnPodcast.classList.add('active');
+            btnPodcast.innerHTML = `<span>🔊</span> ÇALIYOR... <span class="live-badge">LIVE</span>`;
+        } else {
+            audioPlayer.pause();
+            btnPodcast.classList.remove('active');
+            btnPodcast.innerHTML = `<span>🎙️</span> PROJE PODCAST <span class="live-badge">LIVE</span>`;
+        }
     }
+
+    // --- ZOOM & PAN ENGINE ---
+    let scale = 1;
+    let panning = false;
+    let pointX = 0;
+    let pointY = 0;
+    let start = { x: 0, y: 0 };
+    let lastTouch = 0; 
+
+    function setTransform() {
+        imgEl.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
+    }
+
+    function resetZoom() {
+        scale = 1;
+        pointX = 0;
+        pointY = 0;
+        setTransform();
+    }
+
+    // Mouse Zoom
+    zoomContainer.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const xs = (e.clientX - pointX) / scale;
+        const ys = (e.clientY - pointY) / scale;
+        const delta = -e.deltaY;
+        (delta > 0) ? (scale *= 1.1) : (scale /= 1.1);
+        if (scale < 1) scale = 1;
+        if (scale > 5) scale = 5;
+        pointX = e.clientX - xs * scale;
+        pointY = e.clientY - ys * scale;
+        if(scale === 1) { pointX = 0; pointY = 0; }
+        setTransform();
+    });
+
+    // Touch Gestures
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let initialPinchDist = 0;
+    let initialScale = 1;
+
+    zoomContainer.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 2) {
+            e.preventDefault(); 
+            initialPinchDist = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY);
+            initialScale = scale;
+        } else if (e.touches.length === 1) {
+            start.x = e.touches[0].clientX - pointX;
+            start.y = e.touches[0].clientY - pointY;
+            touchStartX = e.touches[0].clientX;
+            panning = true;
+            
+            const now = new Date().getTime();
+            if (now - lastTouch < 300) {
+                if (scale > 1) resetZoom();
+                else { scale = 2.5; setTransform(); }
+            }
+            lastTouch = now;
+        }
+    });
+
+    zoomContainer.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 2) {
+            e.preventDefault();
+            const dist = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY);
+            scale = initialScale * (dist / initialPinchDist);
+            if(scale < 1) scale = 1;
+            if(scale > 5) scale = 5;
+            setTransform();
+        } else if (e.touches.length === 1 && panning && scale > 1) {
+            e.preventDefault();
+            pointX = e.touches[0].clientX - start.x;
+            pointY = e.touches[0].clientY - start.y;
+            setTransform();
+        }
+    });
+
+    zoomContainer.addEventListener('touchend', (e) => {
+        panning = false;
+        // Eğer Zoom yoksa (Scale 1), Swipe (Geçiş) kontrolü yap
+        if (scale === 1 && e.changedTouches.length === 1) {
+            const touchEndX = e.changedTouches[0].clientX;
+            const diffX = touchEndX - touchStartX;
+            if (Math.abs(diffX) > 50) {
+                if (diffX < 0) showSlideViewer(currentIndex + 1);
+                else showSlideViewer(currentIndex - 1);
+            }
+        }
+        if (scale < 1) resetZoom();
+    });
+
+    // Desktop Pan
+    zoomContainer.addEventListener('mousedown', (e) => {
+        if(scale > 1) { e.preventDefault(); start.x = e.clientX - pointX; start.y = e.clientY - pointY; panning = true; }
+    });
+    zoomContainer.addEventListener('mousemove', (e) => {
+        if (!panning) return;
+        e.preventDefault(); pointX = e.clientX - start.x; pointY = e.clientY - start.y; setTransform();
+    });
+    zoomContainer.addEventListener('mouseup', () => { panning = false; });
+    zoomContainer.addEventListener('mouseleave', () => { panning = false; });
 
     // --- RENDER ---
     function renderEvents() {
         const container = document.getElementById('events-container');
         container.innerHTML = ''; 
-
         utmbEvents.forEach(event => {
             const card = document.createElement('div');
             card.className = 'event-card';
             const flag = event.location.match(/[\uD83C][\uDDE6-\uDDFF][\uD83C][\uDDE6-\uDDFF]/) || "🚩";
-
             card.innerHTML = `
                 <div class="event-header">
                     <div class="event-flag">${flag}</div>
