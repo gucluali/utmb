@@ -85,10 +85,13 @@
         border: 1px solid var(--accent);
         padding: 4px 15px;
         border-radius: 50px;
-        background: rgba(0,0,0,0.4);
+        background: rgba(0,0,0,0.6);
         white-space: nowrap;
+        z-index: 40;
     }
     .header-center-title span { color: var(--accent); }
+    
+    .version-text { font-size: 10px; color: #666; }
 
     /* --- LAYOUT --- */
     .layout {
@@ -99,7 +102,7 @@
       position: relative;
     }
 
-    /* --- SIDEBAR (PC) & TOP BAR (MOBILE) --- */
+    /* --- SIDEBAR --- */
     aside {
       width: 280px;
       background: var(--sidebar-bg);
@@ -150,7 +153,6 @@
       color: white;
       border-color: rgba(233, 78, 27, 0.3);
     }
-    .menu-num { font-family: monospace; font-size: 11px; opacity: 0.5; min-width: 20px; }
 
     .sidebar-footer {
         padding: 20px;
@@ -177,6 +179,12 @@
         box-shadow: 0 4px 15px rgba(233, 78, 27, 0.3);
     }
     .nav-btn-main:active { transform: scale(0.96); }
+    /* Buton aktif değilse (yani sunum modundaysak) biraz sönük dursun */
+    .nav-btn-main:not(.active) {
+        background: rgba(255,255,255,0.05);
+        box-shadow: none;
+        border: 1px solid var(--border);
+    }
 
     /* --- MAIN CONTENT --- */
     main {
@@ -209,7 +217,7 @@
         transform: translateY(0);
     }
 
-    /* Başlık */
+    /* Dashboard Stilleri */
     .dash-header {
         display: flex;
         justify-content: space-between;
@@ -220,16 +228,8 @@
     }
     .dash-title h1 { margin: 0; font-size: 24px; font-weight: 300; }
     .dash-title span { font-weight: 800; color: var(--accent); }
-    
-    .stats-badge {
-        background: rgba(255,255,255,0.1);
-        padding: 4px 12px;
-        border-radius: 50px;
-        font-size: 11px;
-        color: #ccc;
-    }
+    .stats-badge { background: rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 50px; font-size: 11px; color: #ccc; }
 
-    /* UTMB EVENTS GRID */
     .events-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -249,8 +249,6 @@
         position: relative;
         overflow: hidden;
     }
-    .event-card:active { background: rgba(255,255,255,0.05); }
-
     .event-header { display: flex; justify-content: space-between; align-items: flex-start; }
     .event-flag { font-size: 22px; }
     .event-series-tag { font-size: 9px; text-transform: uppercase; background: var(--accent); color: white; padding: 3px 6px; border-radius: 4px; font-weight: 700; }
@@ -258,7 +256,7 @@
     .event-location { color: var(--text-muted); font-size: 12px; margin-top: 2px; }
     .event-date { margin-top: auto; font-size: 11px; color: var(--accent); font-weight: 600; display: flex; align-items: center; gap: 5px; }
 
-    /* SLAYT GÖRÜNTÜLEYİCİ */
+    /* SLAYT İZLEYİCİ */
     .slide-viewer-container {
         display: flex;
         flex-direction: column;
@@ -308,70 +306,40 @@
     .nav-btn.prev { left: 10px; }
     .nav-btn.next { right: 10px; }
 
-    /* --- MOBILE OPTIMIZATION --- */
+    /* --- MOBILE --- */
     @media (max-width: 768px) {
       .layout { flex-direction: column; }
-      
       header { padding: 0 15px; height: 50px; }
       .brand { font-size: 14px; }
-      .header-center-title { display: none; } 
-      
+      .header-center-title { display: block !important; font-size: 10px; padding: 2px 10px; border-width: 1px; }
+      .version-text { display: none; }
+
       aside {
-        width: 100%;
-        height: auto;
-        border-right: none;
-        border-bottom: 1px solid var(--border);
-        flex-direction: column; 
-        padding: 5px;
-        background: #111;
-        order: -1; 
+        width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border);
+        flex-direction: column; padding: 5px; background: #111; order: -1; 
       }
 
       .sidebar-footer {
-          padding: 5px 10px;
-          border-top: none;
-          background: transparent;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          width: 100%;
-          order: 1; 
+          padding: 5px 10px; border-top: none; background: transparent; display: flex;
+          justify-content: space-between; align-items: center; width: 100%; order: 1; 
       }
       .nav-btn-main { padding: 8px; font-size: 12px; width: auto; flex: 1; }
       
       .scrollable-list {
-        display: flex;
-        flex-direction: row;
-        overflow-x: auto;
-        padding: 5px 10px;
-        gap: 8px;
-        width: 100%;
-        scroll-snap-type: x mandatory;
-        order: 2; 
+        display: flex; flex-direction: row; overflow-x: auto; padding: 5px 10px; gap: 8px;
+        width: 100%; scroll-snap-type: x mandatory; order: 2; 
       }
-      
       .menu-title { display: none; }
       
       .menu-item {
-        min-width: 120px; 
-        margin: 0;
-        flex-direction: column;
-        justify-content: center;
-        text-align: center;
-        font-size: 11px;
-        padding: 8px;
-        background: rgba(255,255,255,0.05);
-        scroll-snap-align: start;
-        height: 60px;
-        border: 1px solid var(--border);
+        min-width: 120px; margin: 0; flex-direction: column; justify-content: center; text-align: center;
+        font-size: 11px; padding: 8px; background: rgba(255,255,255,0.05); scroll-snap-align: start;
+        height: 60px; border: 1px solid var(--border);
       }
-      .menu-item .menu-num { display: none; }
       
       .view-section { padding: 15px; padding-bottom: 80px; }
-      .dash-title h1 { font-size: 18px; }
       .events-grid { grid-template-columns: 1fr; gap: 10px; }
-      
-      .nav-btn { display: none; } /* Mobilde Swipe kullanılıyor */
+      .nav-btn { display: none; } 
       .slide-viewer-container { justify-content: flex-start; padding-top: 20px; }
     }
   </style>
@@ -388,37 +356,26 @@
         ALİ <span>GÜÇLÜ</span>
     </div>
 
-    <div style="font-size:10px; color:#666;">v5.1 Full List</div>
+    <div class="version-text">v5.3</div>
   </header>
 
   <div class="layout">
     <aside>
       <div class="sidebar-footer" style="order: 1;">
-          <button class="nav-btn-main active" id="btnHome" onclick="showDashboard()">
+          <button class="nav-btn-main" id="btnHome" onclick="showDashboard()">
               <span>🌍</span> KÜRESEL TAKVİM
           </button>
       </div>
 
       <div class="scrollable-list" style="order: 2;">
-        <div class="menu-title">SUNUM DOSYALARI</div>
         <ul class="menu-list" id="menuList" style="display:contents;">
           </ul>
       </div>
     </aside>
 
     <main id="mainArea">
-        
-      <div id="dashboardView" class="view-section active-view">
-          <div class="dash-header">
-              <div class="dash-title">
-                  <h1>UTMB® <span>World Series</span></h1>
-              </div>
-              <div class="stats-badge">43+ ETKİNLİK</div>
-          </div>
-          <div class="events-grid" id="events-container"></div>
-      </div>
-
-      <div id="slideView" class="view-section">
+      
+      <div id="slideView" class="view-section active-view">
           <div class="slide-viewer-container">
             <div class="viewer-frame">
                 <button class="nav-btn prev" id="btnPrev">❮</button>
@@ -431,6 +388,16 @@
                 <div style="margin-top:5px; font-size:10px; opacity:0.5;">(Kaydırmak için sürükleyin)</div>
             </div>
           </div>
+      </div>
+
+      <div id="dashboardView" class="view-section">
+          <div class="dash-header">
+              <div class="dash-title">
+                  <h1>UTMB® <span>World Series</span></h1>
+              </div>
+              <div class="stats-badge">43+ ETKİNLİK</div>
+          </div>
+          <div class="events-grid" id="events-container"></div>
       </div>
 
     </main>
@@ -455,21 +422,17 @@
       { file: "assets/slide_14.webp", title: "Kapanış" }
     ];
 
-    // --- GENİŞLETİLMİŞ UTMB LİSTESİ ---
     const utmbEvents = [
         { name: "Dacia UTMB® Mont-Blanc", location: "Chamonix, Fransa 🇫🇷", date: "Ağustos", tag: "FINALS" },
         { name: "Western States™ 100", location: "California, ABD 🇺🇸", date: "Haziran", tag: "MAJOR" },
         { name: "La Sportiva® Lavaredo", location: "Cortina, İtalya 🇮🇹", date: "Haziran", tag: "MAJOR" },
         { name: "Doi Inthanon Thailand", location: "Tayland 🇹🇭", date: "Aralık", tag: "MAJOR" },
-        
         { name: "Cappadocia Ultra-Trail®", location: "Türkiye 🇹🇷", date: "Ekim", tag: "EVENT" },
-        
         { name: "Transvulcania by UTMB®", location: "La Palma, İspanya 🇪🇸", date: "Mayıs", tag: "SERIES" },
         { name: "Tarawera Ultra-Trail", location: "Yeni Zelanda 🇳🇿", date: "Şubat", tag: "SERIES" },
         { name: "Val d'Aran by UTMB®", location: "İspanya 🇪🇸", date: "Temmuz", tag: "SERIES" },
         { name: "Nice Côte d'Azur", location: "Fransa 🇫🇷", date: "Eylül", tag: "SERIES" },
         { name: "Kodiak Ultra Marathons™", location: "ABD 🇺🇸", date: "Ekim", tag: "SERIES" },
-        
         { name: "Eiger Ultra-Trail™", location: "İsviçre 🇨🇭", date: "Temmuz", tag: "SERIES" },
         { name: "Wildstrubel by UTMB®", location: "İsviçre 🇨🇭", date: "Eylül", tag: "SERIES" },
         { name: "Julian Alps Trail Run", location: "Slovenya 🇸🇮", date: "Eylül", tag: "SERIES" },
@@ -482,7 +445,6 @@
         { name: "Restonica Trail", location: "Korsika 🇫🇷", date: "Temmuz", tag: "SERIES" },
         { name: "Trail du Saint-Jacques", location: "Fransa 🇫🇷", date: "Haziran", tag: "SERIES" },
         { name: "Katzsprung by UTMB®", location: "Almanya 🇩🇪", date: "Mayıs", tag: "SERIES" },
-        
         { name: "Speedgoat™ Mountain Races", location: "Utah, ABD 🇺🇸", date: "Temmuz", tag: "SERIES" },
         { name: "The Canyons Endurance", location: "ABD 🇺🇸", date: "Nisan", tag: "SERIES" },
         { name: "Grindstone Trail Running", location: "ABD 🇺🇸", date: "Eylül", tag: "SERIES" },
@@ -491,7 +453,6 @@
         { name: "Paraty Brazil by UTMB®", location: "Brezilya 🇧🇷", date: "Eylül", tag: "SERIES" },
         { name: "Valhoges by UTMB®", location: "Arjantin 🇦🇷", date: "Mayıs", tag: "SERIES" },
         { name: "Quito Trail by UTMB®", location: "Ekvador 🇪🇨", date: "Ağustos", tag: "SERIES" },
-        
         { name: "Ultra-Trail Kosciuszko", location: "Avustralya 🇦🇺", date: "Aralık", tag: "SERIES" },
         { name: "Ultra-Trail Mount Yun", location: "Çin 🇨🇳", date: "Ekim", tag: "SERIES" },
         { name: "TransJeju by UTMB®", location: "Güney Kore 🇰🇷", date: "Ekim", tag: "SERIES" },
@@ -512,7 +473,7 @@
         slideView.classList.remove('active-view');
         dashView.classList.add('active-view');
         document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
-        btnHome.classList.add('active');
+        btnHome.classList.add('active'); // Butonu aktif yap
     }
 
     function showSlideViewer(index) {
@@ -522,7 +483,7 @@
 
         dashView.classList.remove('active-view');
         slideView.classList.add('active-view');
-        btnHome.classList.remove('active');
+        btnHome.classList.remove('active'); // Butonu pasif yap
 
         imgEl.classList.remove('visible');
         setTimeout(() => {
@@ -553,7 +514,6 @@
         slidesData.forEach((slide, index) => {
             const li = document.createElement('li');
             li.className = 'menu-item';
-            // Mobilde kısa başlıklar daha iyi
             li.innerHTML = `<span>${slide.title}</span>`;
             li.onclick = () => showSlideViewer(index);
             list.appendChild(li);
@@ -563,11 +523,9 @@
     document.getElementById('btnNext').onclick = () => showSlideViewer(currentIndex + 1);
     document.getElementById('btnPrev').onclick = () => showSlideViewer(currentIndex - 1);
 
-    // --- SWIPE (KAYDIRMA) DESTEĞİ ---
+    // --- SWIPE ---
     let touchStartX = 0;
     let touchEndX = 0;
-    
-    // Sadece slideView alanında swipe çalışsın
     const swipeArea = document.getElementById('slideView');
 
     swipeArea.addEventListener('touchstart', e => {
@@ -580,18 +538,12 @@
     }, {passive: true});
 
     function handleSwipe() {
-        const sensitivity = 50; // Hassasiyet
-        if (touchEndX < touchStartX - sensitivity) {
-            // Sola Kaydır -> İleri Git
-            showSlideViewer(currentIndex + 1);
-        }
-        if (touchEndX > touchStartX + sensitivity) {
-            // Sağa Kaydır -> Geri Git
-            showSlideViewer(currentIndex - 1);
-        }
+        const sensitivity = 50; 
+        if (touchEndX < touchStartX - sensitivity) showSlideViewer(currentIndex + 1);
+        if (touchEndX > touchStartX + sensitivity) showSlideViewer(currentIndex - 1);
     }
 
-    // --- ETKİNLİKLERİ YÜKLE ---
+    // --- RENDER ---
     function renderEvents() {
         const container = document.getElementById('events-container');
         container.innerHTML = ''; 
@@ -623,7 +575,6 @@
         return '#444';
     }
 
-    // Klavye
     document.addEventListener('keydown', (e) => {
         if(slideView.classList.contains('active-view')) {
             if(e.key === 'ArrowRight') showSlideViewer(currentIndex + 1);
@@ -631,8 +582,10 @@
         }
     });
 
+    // BAŞLATMA
     initMenu();
     renderEvents();
+    showSlideViewer(0); // <-- KRİTİK DEĞİŞİKLİK: Açılışta 1. Slayt gelsin.
 
   </script>
 </body>
