@@ -231,16 +231,22 @@
 
   <script>
     // --- KONFIGÜRASYON ---
-    // Resimlerin "assets" klasöründe olduğunu varsayıyoruz.
+    // GÜNCELLENDİ: 14 Slayt ve hepsi .webp formatında.
     const slidesData = [
-      { file: "assets/slide_01.webp", title: "Kapak: Vizyon ve Ortaklık" },
-      { file: "assets/slide_02.jpg",  title: "UTMB® World Series Nedir?" }, 
-      { file: "assets/slide_03.webp", title: "Ekonomik Etki ve Turizm" },
-      { file: "assets/slide_04.webp", title: "Operasyonel Karmaşıklık" },
-      { file: "assets/slide_05.webp", title: "Yetenek Ekosistemi" },
-      { file: "assets/slide_06.webp", title: "Gönüllü Ordusu ve Roller" },
-      { file: "assets/slide_07.webp", title: "ESOGÜ Kritik Roller" },
-      { file: "assets/slide_08.webp", title: "ESTÜ Spor ve Teknoloji" }
+      { file: "assets/slide_01.webp", title: "1. Kapak: Vizyon ve Ortaklık" },
+      { file: "assets/slide_02.webp", title: "2. UTMB® World Series Nedir?" }, 
+      { file: "assets/slide_03.webp", title: "3. Ekonomik Etki ve Turizm" },
+      { file: "assets/slide_04.webp", title: "4. Operasyonel Karmaşıklık" },
+      { file: "assets/slide_05.webp", title: "5. Yetenek Ekosistemi" },
+      { file: "assets/slide_06.webp", title: "6. Gönüllü Ordusu ve Roller" },
+      { file: "assets/slide_07.webp", title: "7. ESOGÜ Kritik Roller" },
+      { file: "assets/slide_08.webp", title: "8. ESTÜ Spor ve Teknoloji" },
+      { file: "assets/slide_09.webp", title: "9. Hizmet Mükemmelliği" },
+      { file: "assets/slide_10.webp", title: "10. Kazan-Kazan Modeli" },
+      { file: "assets/slide_11.webp", title: "11. Teşvik ve Ödül Modeli" },
+      { file: "assets/slide_12.webp", title: "12. İş Birliği Yol Haritası" },
+      { file: "assets/slide_13.webp", title: "13. Sonraki Adımlar" },
+      { file: "assets/slide_14.webp", title: "14. Kapanış: Birlikte Tarih Yazalım" }
     ];
 
     let currentIndex = 0;
@@ -255,7 +261,7 @@
       slidesData.forEach((slide, index) => {
         const li = document.createElement('li');
         li.className = 'menu-item';
-        li.innerText = `${index + 1}. ${slide.title}`;
+        li.innerText = slide.title; // Menüde başlık görünsün
         li.onclick = () => loadSlide(index);
         menuListEl.appendChild(li);
       });
@@ -272,7 +278,6 @@
       
       // Kısa bir gecikmeyle resmi yükle (geçiş efekti)
       setTimeout(() => {
-        // HATA DUZELTİLDİ: Artık doğru değişkeni kullanıyoruz
         imgEl.src = slidesData[currentIndex].file;
         
         imgEl.onload = () => {
