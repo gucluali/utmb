@@ -44,7 +44,7 @@
       align-items: center;
       padding: 0 24px;
       padding-top: var(--safe-area-top); 
-      justify-content: space-between;
+      justify-content: space-between; /* İki uca yasla */
       flex-shrink: 0;
       z-index: 30;
       position: relative; 
@@ -58,6 +58,8 @@
       gap: 12px;
       letter-spacing: -0.5px;
       color: white;
+      white-space: nowrap; /* Logo taşmasın */
+      z-index: 50; /* Logoyu öne al */
     }
     .brand-icon {
         width: 24px;
@@ -72,9 +74,9 @@
     }
     .brand span { color: var(--accent); }
 
-    /* ORTA İSİM ALANI */
+    /* ORTA İSİM ALANI (Varsayılan: PC Ayarları) */
     .header-center-title {
-        position: absolute;
+        position: absolute; /* PC'de ortada dursun */
         left: 50%;
         transform: translateX(-50%);
         font-weight: 900;
@@ -179,7 +181,6 @@
         box-shadow: 0 4px 15px rgba(233, 78, 27, 0.3);
     }
     .nav-btn-main:active { transform: scale(0.96); }
-    /* Buton aktif değilse (yani sunum modundaysak) biraz sönük dursun */
     .nav-btn-main:not(.active) {
         background: rgba(255,255,255,0.05);
         box-shadow: none;
@@ -217,7 +218,7 @@
         transform: translateY(0);
     }
 
-    /* Dashboard Stilleri */
+    /* Dashboard */
     .dash-header {
         display: flex;
         justify-content: space-between;
@@ -256,7 +257,7 @@
     .event-location { color: var(--text-muted); font-size: 12px; margin-top: 2px; }
     .event-date { margin-top: auto; font-size: 11px; color: var(--accent); font-weight: 600; display: flex; align-items: center; gap: 5px; }
 
-    /* SLAYT İZLEYİCİ */
+    /* SLAYT GÖRÜNTÜLEYİCİ */
     .slide-viewer-container {
         display: flex;
         flex-direction: column;
@@ -306,12 +307,28 @@
     .nav-btn.prev { left: 10px; }
     .nav-btn.next { right: 10px; }
 
-    /* --- MOBILE --- */
+    /* --- MOBILE OPTIMIZATION --- */
     @media (max-width: 768px) {
       .layout { flex-direction: column; }
       header { padding: 0 15px; height: 50px; }
-      .brand { font-size: 14px; }
-      .header-center-title { display: block !important; font-size: 10px; padding: 2px 10px; border-width: 1px; }
+      
+      .brand { 
+          font-size: 14px; 
+          max-width: 60%; /* Logonun isme çarpmaması için sınır */
+          overflow: hidden;
+      }
+      
+      /* MOBİLDE İSİM SAĞA GEÇER (ÇAKIŞMAYI ÖNLEYEN KOD) */
+      .header-center-title { 
+          display: block !important; 
+          position: static; /* Sabitlemeyi kaldır */
+          transform: none; /* Dönüştürmeyi kaldır */
+          font-size: 10px; 
+          padding: 2px 10px; 
+          border-width: 1px;
+          margin-left: auto; /* En sağa it */
+      }
+      
       .version-text { display: none; }
 
       aside {
@@ -356,7 +373,7 @@
         ALİ <span>GÜÇLÜ</span>
     </div>
 
-    <div class="version-text">v5.3</div>
+    <div class="version-text">v5.4 Fixed</div>
   </header>
 
   <div class="layout">
@@ -500,7 +517,6 @@
             const isActive = i === currentIndex;
             item.classList.toggle('active', isActive);
             if(isActive) {
-                // Mobilde aktif olanı ekrana getir
                 item.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
             }
         });
@@ -585,7 +601,7 @@
     // BAŞLATMA
     initMenu();
     renderEvents();
-    showSlideViewer(0); // <-- KRİTİK DEĞİŞİKLİK: Açılışta 1. Slayt gelsin.
+    showSlideViewer(0); 
 
   </script>
 </body>
