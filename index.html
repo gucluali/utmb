@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <title>Eskişehir UTMB® Strateji Portalı</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%23e94e1b%22/><text y=%22.9em%22 font-size=%2290%22>➜</text></svg>">
   <style>
     :root {
       --bg-dark: #090a0c;
@@ -391,13 +392,12 @@
     .nav-btn.prev { left: 10px; }
     .nav-btn.next { right: 10px; }
 
-    /* --- MOBILE OPTIMIZATION --- */
+    /* --- MOBILE OPTIMIZATION (GÜNCELLENDİ: v7.4) --- */
     @media (max-width: 768px) {
       .layout { flex-direction: column; }
       header { padding: 0 15px; height: 50px; }
       .brand { font-size: 14px; max-width: 60%; overflow:hidden; }
       
-      /* İsim Sağda (Mobilde Çakışma Önlemi) */
       .header-center-title { 
           display: block !important; position: static; transform: none; 
           font-size: 10px; padding: 2px 10px; border-width: 1px; margin-left: auto;
@@ -406,20 +406,42 @@
 
       aside {
         width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border);
-        flex-direction: column; padding: 5px; background: #111; order: -1; 
+        flex-direction: column; padding: 0; background: #111; order: -1; 
       }
 
+      /* Mobilde Buton Alanı (Kompakt Bar) */
       .sidebar-footer {
-          padding: 5px 10px; border-top: none; background: transparent; 
+          padding: 8px; 
+          border-top: none; background: transparent; 
           flex-direction: row; 
-          gap: 8px;
-          order: 1; 
+          gap: 6px;
+          order: 1;
+          flex-wrap: nowrap; /* Asla alt satıra geçme */
+          overflow-x: auto; /* Gerekirse kaydır */
       }
-      .nav-btn-main { padding: 8px; font-size: 11px; flex: 1; justify-content: center; }
+      .sidebar-footer::-webkit-scrollbar { display: none; }
+
+      /* Mobilde Buton Stili (Daha Küçük ve Sıkı) */
+      .nav-btn-main { 
+          padding: 8px 6px; 
+          font-size: 10px; 
+          flex: 1; 
+          justify-content: center;
+          white-space: nowrap; /* Yazı taşmasını engelle */
+          min-width: 90px;
+          gap: 4px;
+      }
+      
+      /* Mobilde LIVE Rozeti (Sıkışıklığı önlemek için küçültüldü) */
+      .live-badge {
+          font-size: 7px; padding: 1px 3px; margin-left: 2px;
+          vertical-align: middle;
+      }
       
       .scrollable-list {
         display: flex; flex-direction: row; overflow-x: auto; padding: 5px 10px; gap: 8px;
         width: 100%; scroll-snap-type: x mandatory; order: 2; 
+        border-top: 1px solid rgba(255,255,255,0.05);
       }
       .menu-title { display: none; }
       
@@ -438,38 +460,19 @@
       .slide-viewer-container { justify-content: flex-start; padding-top: 20px; }
     }
 
-    /* --- MOBILE LANDSCAPE FIX (S23 Ultra vb.) --- */
+    /* --- MOBILE LANDSCAPE FIX --- */
     @media (max-height: 600px) and (orientation: landscape) {
         header { height: 40px !important; padding: 0 15px; }
         .brand { font-size: 13px; }
         .header-center-title { font-size: 9px; padding: 1px 8px; }
-        
-        /* Listeyi ve Butonları Gizle (Sinema Modu) */
         .scrollable-list { display: none !important; }
         .sidebar-footer { display: none !important; }
         aside { height: 0; padding: 0; overflow: hidden; border: none; }
-
-        .view-section { 
-            padding: 0 !important; 
-            padding-bottom: 0 !important; 
-            transform: none !important;
-            height: 100vh;
-        }
-        
-        .slide-viewer-container {
-            justify-content: center !important;
-            padding-top: 0 !important;
-            height: 100%;
-        }
-
-        .viewer-frame { width: 100%; height: 100%; align-items: center; }
-        img#currentSlide { max-height: 98vh; width: auto; max-width: 100%; }
-
-        .slide-info-text {
-            position: absolute; bottom: 10px; right: 10px; margin: 0;
-            background: rgba(0,0,0,0.6); color: white; padding: 4px 10px;
-            border-radius: 12px; font-size: 10px; z-index: 20; pointer-events: none;
-        }
+        .view-section { padding: 0 !important; transform: none !important; height: 100vh; }
+        .slide-viewer-container { justify-content: center !important; padding-top: 0 !important; }
+        .viewer-frame { width: 100%; height: 100%; }
+        img#currentSlide { max-height: 98vh; }
+        .slide-info-text { position: absolute; bottom: 10px; right: 10px; margin: 0; background: rgba(0,0,0,0.6); pointer-events: none; }
     }
   </style>
 </head>
@@ -483,7 +486,7 @@
     <div class="header-center-title">
         ALİ <span>GÜÇLÜ</span>
     </div>
-    <div class="version-text">v7.3 Final</div>
+    <div class="version-text">v7.4 Final</div>
   </header>
 
   <div class="layout">
@@ -638,6 +641,14 @@
     const btnPodcast = document.getElementById('btnPodcast');
     const audioPlayer = document.getElementById('audioPlayer');
     const zoomContainer = document.getElementById('zoomContainer');
+
+    // --- RESİM YÜKLENEMEZSE (Placeholder) ---
+    imgEl.onerror = function() {
+        // Konsola hata bas ama kullanıcıya çaktırma, ya da şık bir placeholder göster
+        console.warn("Görsel eksik: " + this.src);
+        // Bu satırı açarsan kırık resim ikonu yerine hiçbir şey görünmez:
+        // this.style.display = 'none'; 
+    };
 
     // --- NAVİGASYON ---
     function hideAllViews() {
