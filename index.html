@@ -33,7 +33,7 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      touch-action: none; /* Mobilde zoom/pan için kritik */
+      touch-action: none; 
     }
 
     /* --- HEADER --- */
@@ -126,6 +126,15 @@
     }
     .scrollable-list::-webkit-scrollbar { width: 0px; background: transparent; }
 
+    .menu-title {
+      padding: 0 10px 10px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
     .menu-list { list-style: none; padding: 0; margin: 0; }
 
     .menu-item {
@@ -155,61 +164,35 @@
         background: rgba(0,0,0,0.2);
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 10px; /* Butonlar arası boşluk */
     }
 
-    /* BUTONLAR */
     .nav-btn-main {
         width: 100%;
-        background: linear-gradient(45deg, #cc4416, #e94e1b);
-        border: none;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid var(--border);
         color: white;
-        padding: 14px;
-        border-radius: 12px;
+        padding: 12px;
+        border-radius: 8px;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 8px;
-        font-weight: 800;
-        font-size: 13px;
+        font-weight: 700;
+        font-size: 12px;
         letter-spacing: 0.5px;
         transition: 0.2s;
-        box-shadow: 0 4px 15px rgba(233, 78, 27, 0.3);
-        position: relative;
-        overflow: hidden;
     }
-    .nav-btn-main:active { transform: scale(0.96); }
-    .nav-btn-main:not(.active) {
-        background: rgba(255,255,255,0.05);
-        box-shadow: none;
-        border: 1px solid var(--border);
-        opacity: 0.8;
+    .nav-btn-main:hover {
+        background: rgba(255,255,255,0.1);
     }
     .nav-btn-main.active {
-        opacity: 1;
-        box-shadow: 0 4px 15px rgba(233, 78, 27, 0.4);
-        border: 1px solid var(--accent);
+        background: linear-gradient(45deg, #cc4416, #e94e1b);
+        border-color: transparent;
+        box-shadow: 0 4px 15px rgba(233, 78, 27, 0.3);
     }
-
-    /* LIVE BADGE ANIMASYONU */
-    @keyframes blinkLive {
-        0% { opacity: 1; text-shadow: 0 0 5px red; }
-        50% { opacity: 0.4; text-shadow: none; }
-        100% { opacity: 1; text-shadow: 0 0 5px red; }
-    }
-    .live-badge {
-        background: #ff0000;
-        color: white;
-        font-size: 9px;
-        padding: 2px 6px;
-        border-radius: 4px;
-        margin-left: 5px;
-        animation: blinkLive 1.5s infinite ease-in-out;
-        font-weight: 900;
-        letter-spacing: 1px;
-        display: inline-block;
-    }
+    .nav-btn-main:active { transform: scale(0.96); }
 
     /* --- MAIN CONTENT --- */
     main {
@@ -242,7 +225,7 @@
         transform: translateY(0);
     }
 
-    /* Dashboard */
+    /* Dashboard & Video Headers */
     .dash-header {
         display: flex;
         justify-content: space-between;
@@ -255,6 +238,7 @@
     .dash-title span { font-weight: 800; color: var(--accent); }
     .stats-badge { background: rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 50px; font-size: 11px; color: #ccc; }
 
+    /* UTMB Events Grid */
     .events-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -281,7 +265,48 @@
     .event-location { color: var(--text-muted); font-size: 12px; margin-top: 2px; }
     .event-date { margin-top: auto; font-size: 11px; color: var(--accent); font-weight: 600; display: flex; align-items: center; gap: 5px; }
 
-    /* SLAYT GÖRÜNTÜLEYİCİ - ZOOM UPDATE */
+    /* VIDEO GALERİ STİLLERİ (YENİ) */
+    .video-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 25px;
+        padding-bottom: 50px;
+    }
+    
+    .video-card {
+        background: var(--card-bg);
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        transition: transform 0.3s ease;
+    }
+    .video-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+
+    .video-container {
+        position: relative;
+        padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+        height: 0;
+        overflow: hidden;
+        background: #000;
+    }
+    .video-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+    }
+    
+    .video-info {
+        padding: 15px;
+    }
+    .video-title { font-size: 16px; font-weight: 700; color: white; margin-bottom: 5px; }
+    .video-desc { font-size: 12px; color: var(--text-muted); }
+
+
+    /* SLAYT GÖRÜNTÜLEYİCİ */
     .slide-viewer-container {
         display: flex;
         flex-direction: column;
@@ -290,32 +315,30 @@
         height: 100%;
         width: 100%;
         position: relative;
-        overflow: hidden;
     }
 
     .viewer-frame {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        overflow: hidden;
-        cursor: grab;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      cursor: grab;
+      overflow: hidden;
     }
     .viewer-frame:active { cursor: grabbing; }
 
     img#currentSlide {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-        transform-origin: center center;
-        user-select: none;
-        -webkit-user-drag: none;
-        will-change: transform;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      transform-origin: center center;
+      user-select: none; 
+      -webkit-user-drag: none; 
+      will-change: transform; 
     }
 
-    /* Slayt Bilgisi (Rozet) */
     .slide-info-text {
         margin-top: 20px; color: #555; font-size: 12px; text-align: center;
     }
@@ -346,7 +369,6 @@
       header { padding: 0 15px; height: 50px; }
       .brand { font-size: 14px; max-width: 60%; overflow:hidden; }
       
-      /* İsim Sağda (Mobilde Çakışma Önlemi) */
       .header-center-title { 
           display: block !important; position: static; transform: none; 
           font-size: 10px; padding: 2px 10px; border-width: 1px; margin-left: auto;
@@ -359,12 +381,12 @@
       }
 
       .sidebar-footer {
+          /* Mobilde butonları yan yana diz */
+          flex-direction: row;
           padding: 5px 10px; border-top: none; background: transparent; 
-          flex-direction: row; 
-          gap: 8px;
-          order: 1; 
+          width: 100%; order: 1; 
       }
-      .nav-btn-main { padding: 8px; font-size: 11px; flex: 1; justify-content: center; }
+      .nav-btn-main { padding: 8px; font-size: 10px; flex: 1; }
       
       .scrollable-list {
         display: flex; flex-direction: row; overflow-x: auto; padding: 5px 10px; gap: 8px;
@@ -380,41 +402,30 @@
       
       .view-section { padding: 15px; padding-bottom: 80px; }
       .events-grid { grid-template-columns: 1fr; gap: 10px; }
+      
+      /* Mobilde videolar alt alta */
+      .video-grid { grid-template-columns: 1fr; } 
+
       .nav-btn { display: none; } 
       .slide-viewer-container { justify-content: flex-start; padding-top: 20px; }
     }
 
-    /* --- MOBILE LANDSCAPE FIX (S23 Ultra vb.) --- */
-    @media (max-height: 600px) and (orientation: landscape) {
+    /* --- MOBILE LANDSCAPE FIX --- */
+    @media (max-height: 550px) and (orientation: landscape) {
         header { height: 40px !important; padding: 0 15px; }
         .brand { font-size: 13px; }
         .header-center-title { font-size: 9px; padding: 1px 8px; }
-        
-        /* Listeyi ve Butonları Gizle (Sinema Modu) */
         .scrollable-list { display: none !important; }
-        .sidebar-footer { display: none !important; }
-        aside { height: 0; padding: 0; overflow: hidden; border: none; }
-
-        .view-section { 
-            padding: 0 !important; 
-            padding-bottom: 0 !important; 
-            transform: none !important;
-            height: 100vh;
-        }
-        
-        .slide-viewer-container {
-            justify-content: center !important;
-            padding-top: 0 !important;
-            height: 100%;
-        }
-
+        .sidebar-footer { padding: 2px 10px; flex-direction: row; }
+        .nav-btn-main { padding: 4px; font-size: 9px; }
+        .view-section { padding: 5px !important; padding-bottom: 5px !important; transform: none !important; }
+        .slide-viewer-container { justify-content: center !important; padding-top: 0 !important; }
         .viewer-frame { width: 100%; height: 100%; align-items: center; }
-        img#currentSlide { max-height: 98vh; width: auto; max-width: 100%; }
-
+        img#currentSlide { max-height: 85vh; width: auto; max-width: 100%; }
         .slide-info-text {
             position: absolute; bottom: 10px; right: 10px; margin: 0;
-            background: rgba(0,0,0,0.6); color: white; padding: 4px 10px;
-            border-radius: 12px; font-size: 10px; z-index: 20; pointer-events: none;
+            background: rgba(0,0,0,0.7); color: white; padding: 4px 10px;
+            border-radius: 12px; font-size: 10px; z-index: 20; pointer-events: none; text-align: right;
         }
     }
   </style>
@@ -429,21 +440,19 @@
     <div class="header-center-title">
         ALİ <span>GÜÇLÜ</span>
     </div>
-    <div class="version-text">v7.0 Final</div>
+    <div class="version-text">v8.0 Video Edition</div>
   </header>
 
   <div class="layout">
     <aside>
       <div class="sidebar-footer" style="order: 1;">
-          <button class="nav-btn-main" id="btnHome" onclick="showDashboard()">
+          <button class="nav-btn-main" id="btnCalendar" onclick="switchView('calendar')">
               <span>🌍</span> KÜRESEL TAKVİM
           </button>
-          
-          <button class="nav-btn-main" id="btnPodcast" onclick="togglePodcast()">
-              <span>🎙️</span> PROJE PODCAST <span class="live-badge">LIVE</span>
+          <button class="nav-btn-main" id="btnVideos" onclick="switchView('videos')">
+              <span>🎬</span> UTMB FRAGMANLARI
           </button>
       </div>
-
       <div class="scrollable-list" style="order: 2;">
         <ul class="menu-list" id="menuList" style="display:contents;"></ul>
       </div>
@@ -458,7 +467,6 @@
                 <img id="currentSlide" src="" alt="Sunum">
                 <button class="nav-btn next" id="btnNext">❯</button>
             </div>
-            
             <div class="slide-info-text">
                 <span id="slideCounter"></span><br>
                 <span id="slideName" style="color:#aaa;"></span>
@@ -477,10 +485,39 @@
           <div class="events-grid" id="events-container"></div>
       </div>
 
+      <div id="videoView" class="view-section">
+          <div class="dash-header">
+              <div class="dash-title">
+                  <h1>UTMB® <span>Media Gallery</span></h1>
+              </div>
+              <div class="stats-badge" style="background:#cc0000; color:white;">HD VIDEO</div>
+          </div>
+          
+          <div class="video-grid">
+              <div class="video-card">
+                  <div class="video-container">
+                      <iframe src="https://www.youtube.com/embed/Cz73jK1SrMM?si=UtmbDemo1" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                  </div>
+                  <div class="video-info">
+                      <div class="video-title">Best of UTMB Mont-Blanc 2024</div>
+                      <div class="video-desc">HOKA UTMB Official • Duygu, tutku ve zirve mücadelesi.</div>
+                  </div>
+              </div>
+
+              <div class="video-card">
+                  <div class="video-container">
+                      <iframe src="https://www.youtube.com/embed/Q4HzcbK730A?si=UtmbDemo2" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                  </div>
+                  <div class="video-info">
+                      <div class="video-title">UTMB World Series 2025: Global Launch</div>
+                      <div class="video-desc">Küresel Büyüklük • Dünyanın en büyük doğa sporları liginin lansmanı.</div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
     </main>
   </div>
-
-  <audio id="audioPlayer" src="assets/slide_03_audio.m4a" preload="auto"></audio>
 
   <script>
     // --- VERİLER ---
@@ -543,20 +580,37 @@
 
     let currentIndex = 0;
     const imgEl = document.getElementById('currentSlide');
-    const dashView = document.getElementById('dashboardView');
     const slideView = document.getElementById('slideView');
-    const btnHome = document.getElementById('btnHome');
-    const btnPodcast = document.getElementById('btnPodcast');
-    const audioPlayer = document.getElementById('audioPlayer');
+    const dashboardView = document.getElementById('dashboardView');
+    const videoView = document.getElementById('videoView');
+    const btnCalendar = document.getElementById('btnCalendar');
+    const btnVideos = document.getElementById('btnVideos');
     const zoomContainer = document.getElementById('zoomContainer');
 
-    // --- NAVİGASYON ---
-    function showDashboard() {
+    // --- NAVİGASYON (Switch View) ---
+    function switchView(viewName) {
+        // Tüm görünümleri gizle
         slideView.classList.remove('active-view');
-        dashView.classList.add('active-view');
+        dashboardView.classList.remove('active-view');
+        videoView.classList.remove('active-view');
+        
+        // Buton aktifliklerini kaldır
+        btnCalendar.classList.remove('active');
+        btnVideos.classList.remove('active');
         document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
-        btnHome.classList.add('active'); 
-        resetZoom(); 
+
+        // İstenen görünümü aç
+        if (viewName === 'calendar') {
+            dashboardView.classList.add('active-view');
+            btnCalendar.classList.add('active');
+        } else if (viewName === 'videos') {
+            videoView.classList.add('active-view');
+            btnVideos.classList.add('active');
+        } else if (viewName === 'slide') {
+            slideView.classList.add('active-view');
+        }
+        
+        resetZoom(); // Zoom varsa sıfırla
     }
 
     function showSlideViewer(index) {
@@ -564,11 +618,7 @@
         if (index >= slidesData.length) index = slidesData.length - 1;
         currentIndex = index;
 
-        dashView.classList.remove('active-view');
-        slideView.classList.add('active-view');
-        btnHome.classList.remove('active'); 
-
-        resetZoom();
+        switchView('slide'); // Slide görünümüne geç
 
         imgEl.classList.remove('visible');
         setTimeout(() => {
@@ -607,58 +657,37 @@
     document.getElementById('btnNext').onclick = (e) => { e.stopPropagation(); showSlideViewer(currentIndex + 1); };
     document.getElementById('btnPrev').onclick = (e) => { e.stopPropagation(); showSlideViewer(currentIndex - 1); };
 
-    // --- PODCAST OYNATICI ---
-    function togglePodcast() {
-        if (audioPlayer.paused) {
-            audioPlayer.play();
-            btnPodcast.classList.add('active');
-            btnPodcast.innerHTML = `<span>🔊</span> ÇALIYOR... <span class="live-badge">LIVE</span>`;
-        } else {
-            audioPlayer.pause();
-            btnPodcast.classList.remove('active');
-            btnPodcast.innerHTML = `<span>🎙️</span> PROJE PODCAST <span class="live-badge">LIVE</span>`;
-        }
-    }
-
     // --- ZOOM & PAN ENGINE ---
     let scale = 1;
-    let panning = false;
-    let pointX = 0;
-    let pointY = 0;
+    let pointX = 0, pointY = 0;
     let start = { x: 0, y: 0 };
-    let lastTouch = 0; 
+    let lastTouch = 0;
 
     function setTransform() {
         imgEl.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
     }
-
     function resetZoom() {
-        scale = 1;
-        pointX = 0;
-        pointY = 0;
+        scale = 1; pointX = 0; pointY = 0;
         setTransform();
     }
 
-    // Mouse Zoom
     zoomContainer.addEventListener('wheel', (e) => {
         e.preventDefault();
         const xs = (e.clientX - pointX) / scale;
         const ys = (e.clientY - pointY) / scale;
         const delta = -e.deltaY;
         (delta > 0) ? (scale *= 1.1) : (scale /= 1.1);
-        if (scale < 1) scale = 1;
-        if (scale > 5) scale = 5;
+        if (scale < 1) scale = 1; if (scale > 5) scale = 5;
         pointX = e.clientX - xs * scale;
         pointY = e.clientY - ys * scale;
         if(scale === 1) { pointX = 0; pointY = 0; }
         setTransform();
     });
 
-    // Touch Gestures
     let touchStartX = 0;
-    let touchStartY = 0;
     let initialPinchDist = 0;
     let initialScale = 1;
+    let panning = false;
 
     zoomContainer.addEventListener('touchstart', (e) => {
         if (e.touches.length === 2) {
@@ -670,11 +699,9 @@
             start.y = e.touches[0].clientY - pointY;
             touchStartX = e.touches[0].clientX;
             panning = true;
-            
             const now = new Date().getTime();
             if (now - lastTouch < 300) {
-                if (scale > 1) resetZoom();
-                else { scale = 2.5; setTransform(); }
+                if (scale > 1) resetZoom(); else { scale = 2.5; setTransform(); }
             }
             lastTouch = now;
         }
@@ -685,8 +712,7 @@
             e.preventDefault();
             const dist = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY);
             scale = initialScale * (dist / initialPinchDist);
-            if(scale < 1) scale = 1;
-            if(scale > 5) scale = 5;
+            if(scale < 1) scale = 1; if(scale > 5) scale = 5;
             setTransform();
         } else if (e.touches.length === 1 && panning && scale > 1) {
             e.preventDefault();
@@ -698,7 +724,6 @@
 
     zoomContainer.addEventListener('touchend', (e) => {
         panning = false;
-        // Eğer Zoom yoksa (Scale 1), Swipe (Geçiş) kontrolü yap
         if (scale === 1 && e.changedTouches.length === 1) {
             const touchEndX = e.changedTouches[0].clientX;
             const diffX = touchEndX - touchStartX;
@@ -710,18 +735,7 @@
         if (scale < 1) resetZoom();
     });
 
-    // Desktop Pan
-    zoomContainer.addEventListener('mousedown', (e) => {
-        if(scale > 1) { e.preventDefault(); start.x = e.clientX - pointX; start.y = e.clientY - pointY; panning = true; }
-    });
-    zoomContainer.addEventListener('mousemove', (e) => {
-        if (!panning) return;
-        e.preventDefault(); pointX = e.clientX - start.x; pointY = e.clientY - start.y; setTransform();
-    });
-    zoomContainer.addEventListener('mouseup', () => { panning = false; });
-    zoomContainer.addEventListener('mouseleave', () => { panning = false; });
-
-    // --- RENDER ---
+    // --- RENDER EVENTS ---
     function renderEvents() {
         const container = document.getElementById('events-container');
         container.innerHTML = ''; 
@@ -758,10 +772,10 @@
         }
     });
 
-    // BAŞLATMA
+    // INIT
     initMenu();
     renderEvents();
-    showSlideViewer(0); 
+    showSlideViewer(0); // Başlangıçta 1. Slayt
 
   </script>
 </body>
