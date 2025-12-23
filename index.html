@@ -164,7 +164,7 @@
         background: rgba(0,0,0,0.2);
         display: flex;
         flex-direction: column;
-        gap: 10px; /* Butonlar arası boşluk */
+        gap: 10px; 
     }
 
     .nav-btn-main {
@@ -225,7 +225,7 @@
         transform: translateY(0);
     }
 
-    /* Dashboard & Video Headers */
+    /* Headers */
     .dash-header {
         display: flex;
         justify-content: space-between;
@@ -238,7 +238,7 @@
     .dash-title span { font-weight: 800; color: var(--accent); }
     .stats-badge { background: rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 50px; font-size: 11px; color: #ccc; }
 
-    /* UTMB Events Grid */
+    /* Events Grid */
     .events-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -265,14 +265,13 @@
     .event-location { color: var(--text-muted); font-size: 12px; margin-top: 2px; }
     .event-date { margin-top: auto; font-size: 11px; color: var(--accent); font-weight: 600; display: flex; align-items: center; gap: 5px; }
 
-    /* VIDEO GALERİ STİLLERİ (YENİ) */
+    /* VIDEO GALERİ STİLLERİ */
     .video-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
         gap: 25px;
         padding-bottom: 50px;
     }
-    
     .video-card {
         background: var(--card-bg);
         border-radius: 12px;
@@ -282,28 +281,34 @@
         transition: transform 0.3s ease;
     }
     .video-card:hover { transform: translateY(-5px); border-color: var(--accent); }
-
     .video-container {
         position: relative;
-        padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+        padding-bottom: 56.25%; 
         height: 0;
         overflow: hidden;
         background: #000;
     }
     .video-container iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border: 0;
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;
     }
-    
-    .video-info {
-        padding: 15px;
-    }
+    .video-info { padding: 15px; }
     .video-title { font-size: 16px; font-weight: 700; color: white; margin-bottom: 5px; }
     .video-desc { font-size: 12px; color: var(--text-muted); }
+
+    /* PODCAST STİLLERİ (YENİ) */
+    .podcast-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 60vh;
+        text-align: center;
+        border: 1px dashed var(--border);
+        border-radius: 12px;
+        background: rgba(255,255,255,0.02);
+    }
+    .podcast-icon { font-size: 60px; margin-bottom: 20px; animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
 
     /* SLAYT GÖRÜNTÜLEYİCİ */
@@ -381,12 +386,13 @@
       }
 
       .sidebar-footer {
-          /* Mobilde butonları yan yana diz */
+          /* Mobilde butonları yan yana diz, 3 buton olduğu için */
           flex-direction: row;
           padding: 5px 10px; border-top: none; background: transparent; 
           width: 100%; order: 1; 
+          overflow-x: auto; /* Küçük ekranlarda taşarsa kaydır */
       }
-      .nav-btn-main { padding: 8px; font-size: 10px; flex: 1; }
+      .nav-btn-main { padding: 8px; font-size: 9px; flex: 1; white-space: nowrap; min-width: 80px; }
       
       .scrollable-list {
         display: flex; flex-direction: row; overflow-x: auto; padding: 5px 10px; gap: 8px;
@@ -402,381 +408,7 @@
       
       .view-section { padding: 15px; padding-bottom: 80px; }
       .events-grid { grid-template-columns: 1fr; gap: 10px; }
-      
-      /* Mobilde videolar alt alta */
       .video-grid { grid-template-columns: 1fr; } 
 
       .nav-btn { display: none; } 
-      .slide-viewer-container { justify-content: flex-start; padding-top: 20px; }
-    }
-
-    /* --- MOBILE LANDSCAPE FIX --- */
-    @media (max-height: 550px) and (orientation: landscape) {
-        header { height: 40px !important; padding: 0 15px; }
-        .brand { font-size: 13px; }
-        .header-center-title { font-size: 9px; padding: 1px 8px; }
-        .scrollable-list { display: none !important; }
-        .sidebar-footer { padding: 2px 10px; flex-direction: row; }
-        .nav-btn-main { padding: 4px; font-size: 9px; }
-        .view-section { padding: 5px !important; padding-bottom: 5px !important; transform: none !important; }
-        .slide-viewer-container { justify-content: center !important; padding-top: 0 !important; }
-        .viewer-frame { width: 100%; height: 100%; align-items: center; }
-        img#currentSlide { max-height: 85vh; width: auto; max-width: 100%; }
-        .slide-info-text {
-            position: absolute; bottom: 10px; right: 10px; margin: 0;
-            background: rgba(0,0,0,0.7); color: white; padding: 4px 10px;
-            border-radius: 12px; font-size: 10px; z-index: 20; pointer-events: none; text-align: right;
-        }
-    }
-  </style>
-</head>
-<body>
-
-  <header>
-    <div class="brand">
-      <div class="brand-icon">➜</div>
-      UTMB® <span>Eskişehir</span>
-    </div>
-    <div class="header-center-title">
-        ALİ <span>GÜÇLÜ</span>
-    </div>
-    <div class="version-text">v8.0 Video Edition</div>
-  </header>
-
-  <div class="layout">
-    <aside>
-      <div class="sidebar-footer" style="order: 1;">
-          <button class="nav-btn-main" id="btnCalendar" onclick="switchView('calendar')">
-              <span>🌍</span> KÜRESEL TAKVİM
-          </button>
-          <button class="nav-btn-main" id="btnVideos" onclick="switchView('videos')">
-              <span>🎬</span> UTMB FRAGMANLARI
-          </button>
-      </div>
-      <div class="scrollable-list" style="order: 2;">
-        <ul class="menu-list" id="menuList" style="display:contents;"></ul>
-      </div>
-    </aside>
-
-    <main id="mainArea">
-      
-      <div id="slideView" class="view-section active-view">
-          <div class="slide-viewer-container">
-            <div class="viewer-frame" id="zoomContainer">
-                <button class="nav-btn prev" id="btnPrev">❮</button>
-                <img id="currentSlide" src="" alt="Sunum">
-                <button class="nav-btn next" id="btnNext">❯</button>
-            </div>
-            <div class="slide-info-text">
-                <span id="slideCounter"></span><br>
-                <span id="slideName" style="color:#aaa;"></span>
-                <div style="margin-top:2px; font-size:9px; opacity:0.6;">(Çift tıkla Zoom • Kaydır)</div>
-            </div>
-          </div>
-      </div>
-
-      <div id="dashboardView" class="view-section">
-          <div class="dash-header">
-              <div class="dash-title">
-                  <h1>UTMB® <span>World Series</span></h1>
-              </div>
-              <div class="stats-badge">43+ ETKİNLİK</div>
-          </div>
-          <div class="events-grid" id="events-container"></div>
-      </div>
-
-      <div id="videoView" class="view-section">
-          <div class="dash-header">
-              <div class="dash-title">
-                  <h1>UTMB® <span>Media Gallery</span></h1>
-              </div>
-              <div class="stats-badge" style="background:#cc0000; color:white;">HD VIDEO</div>
-          </div>
-          
-          <div class="video-grid">
-              <div class="video-card">
-                  <div class="video-container">
-                      <iframe src="https://www.youtube.com/embed/Cz73jK1SrMM?si=UtmbDemo1" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-                  </div>
-                  <div class="video-info">
-                      <div class="video-title">Best of UTMB Mont-Blanc 2024</div>
-                      <div class="video-desc">HOKA UTMB Official • Duygu, tutku ve zirve mücadelesi.</div>
-                  </div>
-              </div>
-
-              <div class="video-card">
-                  <div class="video-container">
-                      <iframe src="https://www.youtube.com/embed/Q4HzcbK730A?si=UtmbDemo2" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-                  </div>
-                  <div class="video-info">
-                      <div class="video-title">UTMB World Series 2025: Global Launch</div>
-                      <div class="video-desc">Küresel Büyüklük • Dünyanın en büyük doğa sporları liginin lansmanı.</div>
-                  </div>
-              </div>
-          </div>
-      </div>
-
-    </main>
-  </div>
-
-  <script>
-    // --- VERİLER ---
-    const slidesData = [
-      { file: "assets/slide_01.webp", title: "Kapak: Vizyon" },
-      { file: "assets/slide_02.webp", title: "UTMB® Nedir?" }, 
-      { file: "assets/slide_03.webp", title: "Ekonomik Etki" },
-      { file: "assets/slide_04.webp", title: "Operasyon" },
-      { file: "assets/slide_05.webp", title: "Yetenek" },
-      { file: "assets/slide_06.webp", title: "Gönüllü Ordusu" },
-      { file: "assets/slide_07.webp", title: "ESOGÜ Roller" },
-      { file: "assets/slide_08.webp", title: "ESTÜ Spor Tek." },
-      { file: "assets/slide_09.webp", title: "Hizmet" },
-      { file: "assets/slide_10.webp", title: "Kazan-Kazan" },
-      { file: "assets/slide_11.webp", title: "Teşvik Modeli" },
-      { file: "assets/slide_12.webp", title: "Yol Haritası" },
-      { file: "assets/slide_13.webp", title: "Sonraki Adımlar" },
-      { file: "assets/slide_14.webp", title: "Kapanış" }
-    ];
-
-    const utmbEvents = [
-        { name: "Dacia UTMB® Mont-Blanc", location: "Chamonix, Fransa 🇫🇷", date: "Ağustos", tag: "FINALS" },
-        { name: "Western States™ 100", location: "California, ABD 🇺🇸", date: "Haziran", tag: "MAJOR" },
-        { name: "La Sportiva® Lavaredo", location: "Cortina, İtalya 🇮🇹", date: "Haziran", tag: "MAJOR" },
-        { name: "Doi Inthanon Thailand", location: "Tayland 🇹🇭", date: "Aralık", tag: "MAJOR" },
-        { name: "Cappadocia Ultra-Trail®", location: "Türkiye 🇹🇷", date: "Ekim", tag: "EVENT" },
-        { name: "Transvulcania by UTMB®", location: "İspanya 🇪🇸", date: "Mayıs", tag: "SERIES" },
-        { name: "Tarawera Ultra-Trail", location: "Yeni Zelanda 🇳🇿", date: "Şubat", tag: "SERIES" },
-        { name: "Val d'Aran by UTMB®", location: "İspanya 🇪🇸", date: "Temmuz", tag: "SERIES" },
-        { name: "Nice Côte d'Azur", location: "Fransa 🇫🇷", date: "Eylül", tag: "SERIES" },
-        { name: "Kodiak Ultra Marathons™", location: "ABD 🇺🇸", date: "Ekim", tag: "SERIES" },
-        { name: "Eiger Ultra-Trail™", location: "İsviçre 🇨🇭", date: "Temmuz", tag: "SERIES" },
-        { name: "Wildstrubel by UTMB®", location: "İsviçre 🇨🇭", date: "Eylül", tag: "SERIES" },
-        { name: "Julian Alps Trail Run", location: "Slovenya 🇸🇮", date: "Eylül", tag: "SERIES" },
-        { name: "Istria 100™ by UTMB®", location: "Hırvatistan 🇭🇷", date: "Nisan", tag: "SERIES" },
-        { name: "Mozart 100™ by UTMB®", location: "Avusturya 🇦🇹", date: "Haziran", tag: "SERIES" },
-        { name: "Chianti Ultra Trail", location: "İtalya 🇮🇹", date: "Mart", tag: "SERIES" },
-        { name: "Ultra-Trail Snowdonia", location: "Galler 🇬🇧", date: "Mayıs", tag: "SERIES" },
-        { name: "Alsace Grand Est", location: "Fransa 🇫🇷", date: "Mayıs", tag: "SERIES" },
-        { name: "Trail 100 Andorra", location: "Andorra 🇦🇩", date: "Haziran", tag: "SERIES" },
-        { name: "Restonica Trail", location: "Korsika 🇫🇷", date: "Temmuz", tag: "SERIES" },
-        { name: "Trail du Saint-Jacques", location: "Fransa 🇫🇷", date: "Haziran", tag: "SERIES" },
-        { name: "Katzsprung by UTMB®", location: "Almanya 🇩🇪", date: "Mayıs", tag: "SERIES" },
-        { name: "Speedgoat™ Mountain Races", location: "Utah, ABD 🇺🇸", date: "Temmuz", tag: "SERIES" },
-        { name: "The Canyons Endurance", location: "ABD 🇺🇸", date: "Nisan", tag: "SERIES" },
-        { name: "Grindstone Trail Running", location: "ABD 🇺🇸", date: "Eylül", tag: "SERIES" },
-        { name: "Desert RATS™", location: "ABD 🇺🇸", date: "Nisan", tag: "SERIES" },
-        { name: "Puerto Vallarta México", location: "Meksika 🇲🇽", date: "Kasım", tag: "SERIES" },
-        { name: "Paraty Brazil by UTMB®", location: "Brezilya 🇧🇷", date: "Eylül", tag: "SERIES" },
-        { name: "Valhoges by UTMB®", location: "Arjantin 🇦🇷", date: "Mayıs", tag: "SERIES" },
-        { name: "Quito Trail by UTMB®", location: "Ekvador 🇪🇨", date: "Ağustos", tag: "SERIES" },
-        { name: "Ultra-Trail Kosciuszko", location: "Avustralya 🇦🇺", date: "Aralık", tag: "SERIES" },
-        { name: "Ultra-Trail Mount Yun", location: "Çin 🇨🇳", date: "Ekim", tag: "SERIES" },
-        { name: "TransJeju by UTMB®", location: "Güney Kore 🇰🇷", date: "Ekim", tag: "SERIES" },
-        { name: "Amazean Jungle Thailand", location: "Tayland 🇹🇭", date: "Mayıs", tag: "SERIES" },
-        { name: "Ultra-Trail Ninghai", location: "Çin 🇨🇳", date: "Nisan", tag: "SERIES" },
-        { name: "Mauritius by UTMB®", location: "Mauritius 🇲🇺", date: "Haziran", tag: "SERIES" },
-        { name: "Mountain Ultra-Trail", location: "Güney Afrika 🇿🇦", date: "Mayıs", tag: "SERIES" }
-    ];
-
-    let currentIndex = 0;
-    const imgEl = document.getElementById('currentSlide');
-    const slideView = document.getElementById('slideView');
-    const dashboardView = document.getElementById('dashboardView');
-    const videoView = document.getElementById('videoView');
-    const btnCalendar = document.getElementById('btnCalendar');
-    const btnVideos = document.getElementById('btnVideos');
-    const zoomContainer = document.getElementById('zoomContainer');
-
-    // --- NAVİGASYON (Switch View) ---
-    function switchView(viewName) {
-        // Tüm görünümleri gizle
-        slideView.classList.remove('active-view');
-        dashboardView.classList.remove('active-view');
-        videoView.classList.remove('active-view');
-        
-        // Buton aktifliklerini kaldır
-        btnCalendar.classList.remove('active');
-        btnVideos.classList.remove('active');
-        document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
-
-        // İstenen görünümü aç
-        if (viewName === 'calendar') {
-            dashboardView.classList.add('active-view');
-            btnCalendar.classList.add('active');
-        } else if (viewName === 'videos') {
-            videoView.classList.add('active-view');
-            btnVideos.classList.add('active');
-        } else if (viewName === 'slide') {
-            slideView.classList.add('active-view');
-        }
-        
-        resetZoom(); // Zoom varsa sıfırla
-    }
-
-    function showSlideViewer(index) {
-        if (index < 0) index = 0;
-        if (index >= slidesData.length) index = slidesData.length - 1;
-        currentIndex = index;
-
-        switchView('slide'); // Slide görünümüne geç
-
-        imgEl.classList.remove('visible');
-        setTimeout(() => {
-            imgEl.src = slidesData[currentIndex].file;
-            imgEl.onload = () => {
-                imgEl.classList.add('visible');
-                updateMenuUI();
-            };
-        }, 150);
-    }
-
-    function updateMenuUI() {
-        document.querySelectorAll('.menu-item').forEach((item, i) => {
-            const isActive = i === currentIndex;
-            item.classList.toggle('active', isActive);
-            if(isActive) {
-                item.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-            }
-        });
-        document.getElementById('slideCounter').innerText = `Sayfa ${currentIndex + 1}/${slidesData.length}`;
-        document.getElementById('slideName').innerText = slidesData[currentIndex].title;
-    }
-
-    function initMenu() {
-        const list = document.getElementById('menuList');
-        list.innerHTML = "";
-        slidesData.forEach((slide, index) => {
-            const li = document.createElement('li');
-            li.className = 'menu-item';
-            li.innerHTML = `<span>${slide.title}</span>`;
-            li.onclick = () => showSlideViewer(index);
-            list.appendChild(li);
-        });
-    }
-
-    document.getElementById('btnNext').onclick = (e) => { e.stopPropagation(); showSlideViewer(currentIndex + 1); };
-    document.getElementById('btnPrev').onclick = (e) => { e.stopPropagation(); showSlideViewer(currentIndex - 1); };
-
-    // --- ZOOM & PAN ENGINE ---
-    let scale = 1;
-    let pointX = 0, pointY = 0;
-    let start = { x: 0, y: 0 };
-    let lastTouch = 0;
-
-    function setTransform() {
-        imgEl.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
-    }
-    function resetZoom() {
-        scale = 1; pointX = 0; pointY = 0;
-        setTransform();
-    }
-
-    zoomContainer.addEventListener('wheel', (e) => {
-        e.preventDefault();
-        const xs = (e.clientX - pointX) / scale;
-        const ys = (e.clientY - pointY) / scale;
-        const delta = -e.deltaY;
-        (delta > 0) ? (scale *= 1.1) : (scale /= 1.1);
-        if (scale < 1) scale = 1; if (scale > 5) scale = 5;
-        pointX = e.clientX - xs * scale;
-        pointY = e.clientY - ys * scale;
-        if(scale === 1) { pointX = 0; pointY = 0; }
-        setTransform();
-    });
-
-    let touchStartX = 0;
-    let initialPinchDist = 0;
-    let initialScale = 1;
-    let panning = false;
-
-    zoomContainer.addEventListener('touchstart', (e) => {
-        if (e.touches.length === 2) {
-            e.preventDefault(); 
-            initialPinchDist = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY);
-            initialScale = scale;
-        } else if (e.touches.length === 1) {
-            start.x = e.touches[0].clientX - pointX;
-            start.y = e.touches[0].clientY - pointY;
-            touchStartX = e.touches[0].clientX;
-            panning = true;
-            const now = new Date().getTime();
-            if (now - lastTouch < 300) {
-                if (scale > 1) resetZoom(); else { scale = 2.5; setTransform(); }
-            }
-            lastTouch = now;
-        }
-    });
-
-    zoomContainer.addEventListener('touchmove', (e) => {
-        if (e.touches.length === 2) {
-            e.preventDefault();
-            const dist = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY);
-            scale = initialScale * (dist / initialPinchDist);
-            if(scale < 1) scale = 1; if(scale > 5) scale = 5;
-            setTransform();
-        } else if (e.touches.length === 1 && panning && scale > 1) {
-            e.preventDefault();
-            pointX = e.touches[0].clientX - start.x;
-            pointY = e.touches[0].clientY - start.y;
-            setTransform();
-        }
-    });
-
-    zoomContainer.addEventListener('touchend', (e) => {
-        panning = false;
-        if (scale === 1 && e.changedTouches.length === 1) {
-            const touchEndX = e.changedTouches[0].clientX;
-            const diffX = touchEndX - touchStartX;
-            if (Math.abs(diffX) > 50) {
-                if (diffX < 0) showSlideViewer(currentIndex + 1);
-                else showSlideViewer(currentIndex - 1);
-            }
-        }
-        if (scale < 1) resetZoom();
-    });
-
-    // --- RENDER EVENTS ---
-    function renderEvents() {
-        const container = document.getElementById('events-container');
-        container.innerHTML = ''; 
-        utmbEvents.forEach(event => {
-            const card = document.createElement('div');
-            card.className = 'event-card';
-            const flag = event.location.match(/[\uD83C][\uDDE6-\uDDFF][\uD83C][\uDDE6-\uDDFF]/) || "🚩";
-            card.innerHTML = `
-                <div class="event-header">
-                    <div class="event-flag">${flag}</div>
-                    <div class="event-series-tag" style="background:${getTagColor(event.tag)}">${event.tag}</div>
-                </div>
-                <div>
-                    <div class="event-title">${event.name}</div>
-                    <div class="event-location">${event.location.replace(flag, '').trim()}</div>
-                </div>
-                <div class="event-date">📅 ${event.date}</div>
-            `;
-            container.appendChild(card);
-        });
-    }
-
-    function getTagColor(tag) {
-        if(tag === 'FINALS') return '#e94e1b';
-        if(tag === 'MAJOR') return '#d93a10';
-        if(tag === 'EVENT') return '#cc0000';
-        return '#444';
-    }
-
-    document.addEventListener('keydown', (e) => {
-        if(slideView.classList.contains('active-view')) {
-            if(e.key === 'ArrowRight') showSlideViewer(currentIndex + 1);
-            if(e.key === 'ArrowLeft') showSlideViewer(currentIndex - 1);
-        }
-    });
-
-    // INIT
-    initMenu();
-    renderEvents();
-    showSlideViewer(0); // Başlangıçta 1. Slayt
-
-  </script>
-</body>
-</html>
+      .
