@@ -360,13 +360,14 @@
     .stat-value-big { font-size: 32px; font-weight: 800; color: white; margin-bottom: 5px; }
     .stat-desc { font-size: 12px; color: #8b949e; line-height: 1.5; }
 
-    /* HARİTA STİLLERİ */
+    /* HARİTA STİLLERİ - DÜZELTİLDİ */
     #raceMap {
         height: 450px;
         width: 100%;
         border-radius: 12px;
         border: 1px solid var(--border);
         z-index: 1;
+        background: #222; /* Yüklenirken gri görünmesin diye koyu renk */
     }
     .map-wrapper {
         background: var(--card-bg);
@@ -474,7 +475,7 @@
     <div class="header-center-title">
         ALİ <span>GÜÇLÜ</span>
     </div>
-    <div class="version-text">v7.4 Final</div>
+    <div class="version-text">v7.6 Fix</div>
   </header>
 
   <div class="layout">
@@ -557,7 +558,7 @@
               <div class="dash-title">
                   <h1>PROJE <span>FİZİBİLİTESİ</span></h1>
               </div>
-              <div class="stats-badge">v7.4 RAPOR ÖZETİ</div>
+              <div class="stats-badge">v7.6 RAPOR ÖZETİ</div>
           </div>
 
           <div class="strategy-container">
@@ -718,30 +719,34 @@
         resetZoom();
     }
 
+    // --- DÜZELTİLMİŞ STRATEJİ & HARİTA AÇILIŞ FONKSİYONU ---
     function showStrategy() {
         hideAllViews();
         strategyView.classList.add('active-view');
         btnStrategy.classList.add('active');
         resetZoom();
 
-        // Harita Görünür Olduğunda Yükle
+        // FIX: Animasyonun (0.3s) bitmesini bekle, sonra haritayı çiz.
+        // Yoksa gri ekran görünür.
         setTimeout(() => {
             if (!mapInitialized) {
                 initRaceMap();
             } else {
-                map.invalidateSize(); // Boyutlandırma hatasını önle
+                map.invalidateSize(); // Harita boyutunu zorla güncelle
             }
-        }, 100);
+        }, 350); 
     }
 
     // --- LEAFLET MAP LOGIC (RACE ROUTES) ---
     function initRaceMap() {
-        // Eskişehir Koordinatları (Odunpazarı civarı Start)
-        const startPoint = [39.760, 30.525]; 
+        const startPoint = [39.760, 30.525]; // Odunpazarı
         
+        // Eğer harita zaten varsa (hatalı yüklenmişse), onu temizle
+        if (map) { map.remove(); }
+
         map = L.map('raceMap').setView(startPoint, 11);
 
-        // Dark/Cyber Temaya Uygun Harita Katmanı (CartoDB Dark Matter)
+        // Dark/Cyber Temaya Uygun Harita Katmanı
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; OpenStreetMap &copy; CARTO',
             subdomains: 'abcd',
@@ -756,40 +761,37 @@
             iconAnchor: [6, 6]
         });
 
-        // 20K ROTASI (Yeşil) - Temsili Döngü
+        // 20K ROTASI (Yeşil)
         const route20k = [
             startPoint,
-            [39.750, 30.500], [39.740, 30.490], [39.730, 30.510], // Kent Ormanı
+            [39.750, 30.500], [39.740, 30.490], [39.730, 30.510],
             [39.740, 30.540], startPoint
         ];
 
-        // 50K ROTASI (Turuncu) - Frig Vadisi Girişi
+        // 50K ROTASI (Turuncu)
         const route50k = [
             startPoint,
-            [39.750, 30.500], [39.720, 30.450], // Orman içi
-            [39.680, 30.400], [39.650, 30.450], // Musaözü Göleti Tarafı
+            [39.750, 30.500], [39.720, 30.450],
+            [39.680, 30.400], [39.650, 30.450],
             [39.700, 30.550], [39.740, 30.540], startPoint
         ];
 
-        // 100K ROTASI (Kırmızı) - Sündiken Tırmanışı
+        // 100K ROTASI (Kırmızı)
         const route100k = [
             startPoint,
             [39.750, 30.500], [39.720, 30.450], 
-            [39.600, 30.350], [39.550, 30.300], // Derin Vadi
-            [39.500, 30.400], [39.550, 30.600], // Tırmanış
+            [39.600, 30.350], [39.550, 30.300],
+            [39.500, 30.400], [39.550, 30.600],
             [39.650, 30.700], [39.720, 30.600], startPoint
         ];
 
-        // Rotaları Çiz
         const poly20k = L.polyline(route20k, {color: '#4caf50', weight: 4, opacity: 0.8}).addTo(map);
         const poly50k = L.polyline(route50k, {color: '#ff9800', weight: 4, opacity: 0.8}).addTo(map);
         const poly100k = L.polyline(route100k, {color: '#f44336', weight: 4, opacity: 0.8}).addTo(map);
 
-        // Start Noktası İşaretçisi
         L.marker(startPoint, {icon: startIcon}).addTo(map)
             .bindPopup("<b>🏁 START / FINISH</b><br>Odunpazarı Meydanı").openPopup();
 
-        // Check Points (Örnek)
         const cpIcon = L.divIcon({
             className: 'custom-div-icon',
             html: "<div style='background-color:#e94e1b; width:8px; height:8px; border-radius:50%;'></div>",
@@ -799,7 +801,6 @@
         L.marker([39.680, 30.400], {icon: cpIcon}).addTo(map).bindPopup("CP 1: Musaözü (50K/100K)");
         L.marker([39.550, 30.300], {icon: cpIcon}).addTo(map).bindPopup("CP 3: Frig Vadisi (100K)");
 
-        // Katman Kontrolü (Aç/Kapa)
         const overlayMaps = {
             "20K Parkuru (Yeşil)": poly20k,
             "50K Parkuru (Turuncu)": poly50k,
