@@ -202,6 +202,11 @@
         background: rgba(255,255,255,0.1);
     }
 
+    /* Strateji Butonu için hafif farklı ton (Opsiyonel) */
+    .nav-btn-strategy {
+        background: linear-gradient(45deg, #1a1f26, #2a2f38);
+    }
+
     /* LIVE BADGE ANIMASYONU */
     @keyframes blinkLive {
         0% { opacity: 1; text-shadow: 0 0 5px red; }
@@ -331,6 +336,89 @@
         width: 100%;
         height: 100%;
         border: none;
+    }
+
+    /* --- STRATEJİ & ANALİZ BÖLÜMÜ STİLLERİ (YENİ) --- */
+    .strategy-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        padding-bottom: 50px;
+    }
+
+    .stat-card {
+        background: linear-gradient(145deg, #1a1f26, #161b22);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-left: 3px solid var(--accent);
+        border-radius: 12px;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card h3 {
+        margin: 0 0 15px 0;
+        font-size: 14px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        letter-spacing: 1px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .stat-value-big {
+        font-size: 32px;
+        font-weight: 800;
+        color: white;
+        margin-bottom: 5px;
+    }
+
+    .stat-desc {
+        font-size: 12px;
+        color: #8b949e;
+        line-height: 1.5;
+    }
+
+    /* Timeline (Yol Haritası) */
+    .roadmap-container {
+        margin-top: 10px;
+        border-left: 2px solid rgba(233, 78, 27, 0.3);
+        padding-left: 20px;
+    }
+    .roadmap-item {
+        position: relative;
+        margin-bottom: 20px;
+    }
+    .roadmap-item::before {
+        content: '';
+        position: absolute;
+        left: -26px;
+        top: 5px;
+        width: 10px;
+        height: 10px;
+        background: var(--bg-dark);
+        border: 2px solid var(--accent);
+        border-radius: 50%;
+    }
+    .roadmap-item.done::before { background: var(--accent); }
+    .roadmap-date { font-size: 10px; color: var(--accent); font-weight: bold; }
+    .roadmap-title { font-size: 13px; color: white; font-weight: 600; }
+
+    /* Üniversite Logoları için Basit Grid */
+    .uni-grid {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+        flex-wrap: wrap;
+    }
+    .uni-badge {
+        background: rgba(255,255,255,0.1);
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 10px;
+        color: white;
+        border: 1px solid rgba(255,255,255,0.1);
     }
 
     /* SLAYT GÖRÜNTÜLEYİCİ - ZOOM UPDATE */
@@ -500,6 +588,10 @@
               <span>📺</span> UTMB® TV
           </button>
 
+          <button class="nav-btn-main nav-btn-strategy" id="btnStrategy" onclick="showStrategy()">
+              <span>📊</span> STRATEJİ & ANALİZ
+          </button>
+
           <button class="nav-btn-main" id="btnPodcast" onclick="togglePodcast()">
               <span>🎙️</span> PROJE PODCAST <span class="live-badge">LIVE</span>
           </button>
@@ -565,6 +657,79 @@
                 </div>
             </div>
         </div>
+      </div>
+
+      <div id="strategyView" class="view-section">
+          <div class="dash-header">
+              <div class="dash-title">
+                  <h1>PROJE <span>FİZİBİLİTESİ</span></h1>
+              </div>
+              <div class="stats-badge">v7.4 RAPOR ÖZETİ</div>
+          </div>
+
+          <div class="strategy-grid">
+              <div class="stat-card">
+                  <h3>LOGİSTİK & ERİŞİM <span style="color:var(--accent)">A+</span></h3>
+                  <div class="stat-value-big">3 BÜYÜKŞEHİR</div>
+                  <div class="stat-desc">
+                      Ankara, İstanbul ve Konya'ya YHT ile tam entegre.
+                      <br><br>
+                      <strong>✈️ Erişim:</strong> Havalimanı & Demiryolu<br>
+                      <strong>🏨 Kapasite:</strong> 5 Yıldızlı Otel Altyapısı (Tasigo, Rixos)
+                  </div>
+              </div>
+
+              <div class="stat-card">
+                  <h3>PARKUR TEKNİK <span style="color:#4caf50">HAZIR</span></h3>
+                  <div class="stat-value-big">100K / 4000m+</div>
+                  <div class="stat-desc">
+                      Sündiken Dağları ve Frig Vadisi rotaları.
+                      <ul>
+                          <li>⛰️ <strong>Zirve:</strong> Türkmen Dağı (1826m)</li>
+                          <li>🏛️ <strong>Kültür:</strong> Frig Yolu Entegrasyonu</li>
+                          <li>🌲 <strong>Zemin:</strong> %85 Orman Yolu / Patika</li>
+                      </ul>
+                     
+                  </div>
+              </div>
+
+              <div class="stat-card">
+                  <h3>İNSAN KAYNAĞI <span style="color:#2196f3">ÜNİVERSİTE</span></h3>
+                  <div class="stat-desc">
+                      Eskişehir'deki 3 üniversite ile stratejik gönüllü iş birliği modeli.
+                  </div>
+                  <div class="uni-grid">
+                      <div class="uni-badge">A.Ü. (Turizm)</div>
+                      <div class="uni-badge">ESOGÜ (Sağlık)</div>
+                      <div class="uni-badge">ESTÜ (Spor)</div>
+                  </div>
+                  <div style="margin-top:10px; font-size:11px; color:#aaa;">
+                      * 350+ Akredite Gönüllü Potansiyeli
+                  </div>
+              </div>
+
+              <div class="stat-card" style="grid-column: span 1;">
+                  <h3>YOL HARİTASI</h3>
+                  <div class="roadmap-container">
+                      <div class="roadmap-item done">
+                          <div class="roadmap-date">2024 Q4</div>
+                          <div class="roadmap-title">Fizibilite & Rota Belirleme</div>
+                      </div>
+                      <div class="roadmap-item done">
+                          <div class="roadmap-date">2025 Q1</div>
+                          <div class="roadmap-title">UTMB® Ön Görüşmeler</div>
+                      </div>
+                      <div class="roadmap-item">
+                          <div class="roadmap-date">2025 Q3</div>
+                          <div class="roadmap-title">Test Yarışı (Candidate Race)</div>
+                      </div>
+                      <div class="roadmap-item">
+                          <div class="roadmap-date">2026</div>
+                          <div class="roadmap-title">UTMB® World Series Event</div>
+                      </div>
+                  </div>
+              </div>
+          </div>
       </div>
 
     </main>
@@ -633,21 +798,25 @@
 
     let currentIndex = 0;
     const imgEl = document.getElementById('currentSlide');
+    
+    // VIEW ELEMENTLERİ
     const dashView = document.getElementById('dashboardView');
     const slideView = document.getElementById('slideView');
     const tvView = document.getElementById('tvView');
+    const strategyView = document.getElementById('strategyView'); // YENİ
+    
+    // BUTONLAR
     const btnHome = document.getElementById('btnHome');
     const btnTv = document.getElementById('btnTv');
+    const btnStrategy = document.getElementById('btnStrategy'); // YENİ
     const btnPodcast = document.getElementById('btnPodcast');
+    
     const audioPlayer = document.getElementById('audioPlayer');
     const zoomContainer = document.getElementById('zoomContainer');
 
     // --- RESİM YÜKLENEMEZSE (Placeholder) ---
     imgEl.onerror = function() {
-        // Konsola hata bas ama kullanıcıya çaktırma, ya da şık bir placeholder göster
         console.warn("Görsel eksik: " + this.src);
-        // Bu satırı açarsan kırık resim ikonu yerine hiçbir şey görünmez:
-        // this.style.display = 'none'; 
     };
 
     // --- NAVİGASYON ---
@@ -655,9 +824,11 @@
         slideView.classList.remove('active-view');
         dashView.classList.remove('active-view');
         tvView.classList.remove('active-view');
+        strategyView.classList.remove('active-view'); // YENİ
         
         btnHome.classList.remove('active');
         btnTv.classList.remove('active');
+        btnStrategy.classList.remove('active'); // YENİ
         document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
     }
 
@@ -672,6 +843,14 @@
         hideAllViews();
         tvView.classList.add('active-view');
         btnTv.classList.add('active');
+        resetZoom();
+    }
+
+    // YENİ STRATEJİ FONKSİYONU
+    function showStrategy() {
+        hideAllViews();
+        strategyView.classList.add('active-view');
+        btnStrategy.classList.add('active');
         resetZoom();
     }
 
