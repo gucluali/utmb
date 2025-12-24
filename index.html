@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <title>Eskişehir UTMB® Strateji Portalı</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%23e94e1b%22/><text y=%22.9em%22 font-size=%2290%22>➜</text></svg>">
+  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRS9BMY=" crossorigin="" />
+  
   <style>
     :root {
       --bg-dark: #090a0c;
@@ -77,7 +80,6 @@
     }
     .brand span { color: var(--accent); }
 
-    /* ORTA İSİM ALANI */
     .header-center-title {
         position: absolute;
         left: 50%;
@@ -159,7 +161,6 @@
         gap: 12px;
     }
 
-    /* BUTONLAR */
     .nav-btn-main {
         width: 100%;
         background: linear-gradient(45deg, #cc4416, #e94e1b);
@@ -193,7 +194,6 @@
         border: 1px solid var(--accent);
     }
     
-    /* UTMB TV Butonu - Sidebar İçin Özel Stil */
     .nav-btn-tv {
         background: linear-gradient(45deg, #1a1a1a, #333);
         border: 1px solid rgba(255,255,255,0.1);
@@ -202,12 +202,10 @@
         background: rgba(255,255,255,0.1);
     }
 
-    /* Strateji Butonu için hafif farklı ton (Opsiyonel) */
     .nav-btn-strategy {
         background: linear-gradient(45deg, #1a1f26, #2a2f38);
     }
 
-    /* LIVE BADGE ANIMASYONU */
     @keyframes blinkLive {
         0% { opacity: 1; text-shadow: 0 0 5px red; }
         50% { opacity: 0.4; text-shadow: none; }
@@ -257,7 +255,6 @@
         transform: translateY(0);
     }
 
-    /* Dashboard */
     .dash-header {
         display: flex;
         justify-content: space-between;
@@ -296,7 +293,7 @@
     .event-location { color: var(--text-muted); font-size: 12px; margin-top: 2px; }
     .event-date { margin-top: auto; font-size: 11px; color: var(--accent); font-weight: 600; display: flex; align-items: center; gap: 5px; }
 
-    /* --- VIDEO TV GRID --- */
+    /* TV GRID */
     .tv-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -322,28 +319,29 @@
         justify-content: space-between;
         align-items: center;
     }
-    .tv-header span { color: var(--accent); font-size: 10px; border: 1px solid var(--accent); padding: 2px 6px; border-radius: 4px;}
     .video-wrapper {
         position: relative;
-        padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+        padding-bottom: 56.25%; 
         height: 0;
         background: black;
     }
     .video-wrapper iframe {
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border: none;
+        top: 0; left: 0; width: 100%; height: 100%; border: none;
     }
 
-    /* --- STRATEJİ & ANALİZ BÖLÜMÜ STİLLERİ (YENİ) --- */
+    /* STRATEGY GRID & MAP STYLES */
+    .strategy-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding-bottom: 50px;
+    }
+
     .strategy-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         gap: 20px;
-        padding-bottom: 50px;
     }
 
     .stat-card {
@@ -355,212 +353,114 @@
         position: relative;
         overflow: hidden;
     }
-
     .stat-card h3 {
-        margin: 0 0 15px 0;
-        font-size: 14px;
-        text-transform: uppercase;
-        color: var(--text-muted);
-        letter-spacing: 1px;
+        margin: 0 0 15px 0; font-size: 14px; text-transform: uppercase; color: var(--text-muted);
+        letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .stat-value-big { font-size: 32px; font-weight: 800; color: white; margin-bottom: 5px; }
+    .stat-desc { font-size: 12px; color: #8b949e; line-height: 1.5; }
+
+    /* HARİTA STİLLERİ */
+    #raceMap {
+        height: 450px;
+        width: 100%;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        z-index: 1;
+    }
+    .map-wrapper {
+        background: var(--card-bg);
+        padding: 15px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+    }
+    .map-legend {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .stat-value-big {
-        font-size: 32px;
-        font-weight: 800;
-        color: white;
-        margin-bottom: 5px;
-    }
-
-    .stat-desc {
+        gap: 15px;
+        margin-bottom: 10px;
         font-size: 12px;
-        color: #8b949e;
-        line-height: 1.5;
+        color: #ccc;
     }
+    .legend-item { display: flex; align-items: center; gap: 5px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
 
-    /* Timeline (Yol Haritası) */
+    /* Roadmap */
     .roadmap-container {
-        margin-top: 10px;
-        border-left: 2px solid rgba(233, 78, 27, 0.3);
-        padding-left: 20px;
+        margin-top: 10px; border-left: 2px solid rgba(233, 78, 27, 0.3); padding-left: 20px;
     }
-    .roadmap-item {
-        position: relative;
-        margin-bottom: 20px;
-    }
+    .roadmap-item { position: relative; margin-bottom: 20px; }
     .roadmap-item::before {
-        content: '';
-        position: absolute;
-        left: -26px;
-        top: 5px;
-        width: 10px;
-        height: 10px;
-        background: var(--bg-dark);
-        border: 2px solid var(--accent);
-        border-radius: 50%;
+        content: ''; position: absolute; left: -26px; top: 5px; width: 10px; height: 10px;
+        background: var(--bg-dark); border: 2px solid var(--accent); border-radius: 50%;
     }
     .roadmap-item.done::before { background: var(--accent); }
     .roadmap-date { font-size: 10px; color: var(--accent); font-weight: bold; }
     .roadmap-title { font-size: 13px; color: white; font-weight: 600; }
 
-    /* Üniversite Logoları için Basit Grid */
-    .uni-grid {
-        display: flex;
-        gap: 10px;
-        margin-top: 15px;
-        flex-wrap: wrap;
-    }
-    .uni-badge {
-        background: rgba(255,255,255,0.1);
-        padding: 5px 10px;
-        border-radius: 4px;
-        font-size: 10px;
-        color: white;
-        border: 1px solid rgba(255,255,255,0.1);
-    }
+    .uni-grid { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+    .uni-badge { background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 4px; font-size: 10px; color: white; border: 1px solid rgba(255,255,255,0.1); }
 
-    /* SLAYT GÖRÜNTÜLEYİCİ - ZOOM UPDATE */
+    /* SLIDE VIEWER */
     .slide-viewer-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-        width: 100%;
-        position: relative;
-        overflow: hidden;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        height: 100%; width: 100%; position: relative; overflow: hidden;
     }
-
     .viewer-frame {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        overflow: hidden;
-        cursor: grab;
+        width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+        position: relative; overflow: hidden; cursor: grab;
     }
     .viewer-frame:active { cursor: grabbing; }
-
     img#currentSlide {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-        transform-origin: center center;
-        user-select: none;
-        -webkit-user-drag: none;
-        will-change: transform;
+        max-width: 100%; max-height: 100%; object-fit: contain;
+        transform-origin: center center; user-select: none; -webkit-user-drag: none; will-change: transform;
     }
-
-    /* Slayt Bilgisi (Rozet) */
-    .slide-info-text {
-        margin-top: 20px; color: #555; font-size: 12px; text-align: center;
-    }
-
+    .slide-info-text { margin-top: 20px; color: #555; font-size: 12px; text-align: center; }
     .nav-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(0,0,0,0.5);
-      border: 1px solid rgba(255,255,255,0.1);
-      color: white;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      z-index: 10;
+      position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.1); color: white; width: 44px; height: 44px;
+      border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 18px; z-index: 10;
     }
     .nav-btn.prev { left: 10px; }
     .nav-btn.next { right: 10px; }
 
-    /* --- MOBILE OPTIMIZATION (GÜNCELLENDİ: v7.4) --- */
+    /* MOBILE */
     @media (max-width: 768px) {
       .layout { flex-direction: column; }
       header { padding: 0 15px; height: 50px; }
       .brand { font-size: 14px; max-width: 60%; overflow:hidden; }
-      
       .header-center-title { 
           display: block !important; position: static; transform: none; 
           font-size: 10px; padding: 2px 10px; border-width: 1px; margin-left: auto;
       }
       .version-text { display: none; }
-
       aside {
         width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border);
         flex-direction: column; padding: 0; background: #111; order: -1; 
       }
-
-      /* Mobilde Buton Alanı (Kompakt Bar) */
       .sidebar-footer {
-          padding: 8px; 
-          border-top: none; background: transparent; 
-          flex-direction: row; 
-          gap: 6px;
-          order: 1;
-          flex-wrap: nowrap; /* Asla alt satıra geçme */
-          overflow-x: auto; /* Gerekirse kaydır */
+          padding: 8px; border-top: none; background: transparent; flex-direction: row; 
+          gap: 6px; order: 1; flex-wrap: nowrap; overflow-x: auto;
       }
       .sidebar-footer::-webkit-scrollbar { display: none; }
-
-      /* Mobilde Buton Stili (Daha Küçük ve Sıkı) */
-      .nav-btn-main { 
-          padding: 8px 6px; 
-          font-size: 10px; 
-          flex: 1; 
-          justify-content: center;
-          white-space: nowrap; /* Yazı taşmasını engelle */
-          min-width: 90px;
-          gap: 4px;
-      }
-      
-      /* Mobilde LIVE Rozeti (Sıkışıklığı önlemek için küçültüldü) */
-      .live-badge {
-          font-size: 7px; padding: 1px 3px; margin-left: 2px;
-          vertical-align: middle;
-      }
-      
+      .nav-btn-main { padding: 8px 6px; font-size: 10px; flex: 1; justify-content: center; white-space: nowrap; min-width: 90px; gap: 4px; }
       .scrollable-list {
         display: flex; flex-direction: row; overflow-x: auto; padding: 5px 10px; gap: 8px;
         width: 100%; scroll-snap-type: x mandatory; order: 2; 
         border-top: 1px solid rgba(255,255,255,0.05);
       }
-      .menu-title { display: none; }
-      
       .menu-item {
         min-width: 120px; margin: 0; flex-direction: column; justify-content: center; text-align: center;
         font-size: 11px; padding: 8px; background: rgba(255,255,255,0.05); scroll-snap-align: start;
         height: 60px; border: 1px solid var(--border);
       }
-      
       .tv-grid { grid-template-columns: 1fr; overflow-y: auto; display: block; }
       .tv-card { margin-bottom: 20px; }
-      
       .view-section { padding: 15px; padding-bottom: 80px; }
       .events-grid { grid-template-columns: 1fr; gap: 10px; }
       .nav-btn { display: none; } 
       .slide-viewer-container { justify-content: flex-start; padding-top: 20px; }
-    }
-
-    /* --- MOBILE LANDSCAPE FIX --- */
-    @media (max-height: 600px) and (orientation: landscape) {
-        header { height: 40px !important; padding: 0 15px; }
-        .brand { font-size: 13px; }
-        .header-center-title { font-size: 9px; padding: 1px 8px; }
-        .scrollable-list { display: none !important; }
-        .sidebar-footer { display: none !important; }
-        aside { height: 0; padding: 0; overflow: hidden; border: none; }
-        .view-section { padding: 0 !important; transform: none !important; height: 100vh; }
-        .slide-viewer-container { justify-content: center !important; padding-top: 0 !important; }
-        .viewer-frame { width: 100%; height: 100%; }
-        img#currentSlide { max-height: 98vh; }
-        .slide-info-text { position: absolute; bottom: 10px; right: 10px; margin: 0; background: rgba(0,0,0,0.6); pointer-events: none; }
+      #raceMap { height: 350px; } /* Mobile Map Height */
     }
   </style>
 </head>
@@ -611,7 +511,6 @@
                 <img id="currentSlide" src="" alt="Sunum">
                 <button class="nav-btn next" id="btnNext">❯</button>
             </div>
-            
             <div class="slide-info-text">
                 <span id="slideCounter"></span><br>
                 <span id="slideName" style="color:#aaa;"></span>
@@ -639,21 +538,15 @@
         </div>
         <div class="tv-grid">
             <div class="tv-card">
-                <div class="tv-header">
-                    KURUMSAL GÜÇ & VİZYON
-                    <span>WORLD SERIES 2025</span>
-                </div>
+                <div class="tv-header">KURUMSAL GÜÇ & VİZYON <span>WORLD SERIES 2025</span></div>
                 <div class="video-wrapper">
-                    <iframe src="https://www.youtube.com/embed/Q4HzcbK730A?rel=0&modestbranding=1" title="UTMB World Series 2025" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    <iframe src="https://www.youtube.com/embed/Q4HzcbK730A?rel=0&modestbranding=1" frameborder="0" allowfullscreen></iframe>
                 </div>
             </div>
             <div class="tv-card">
-                <div class="tv-header">
-                    SAF ADRENALİN & DUYGU
-                    <span>BEST OF UTMB 2024</span>
-                </div>
+                <div class="tv-header">SAF ADRENALİN & DUYGU <span>BEST OF UTMB 2024</span></div>
                 <div class="video-wrapper">
-                    <iframe src="https://www.youtube.com/embed/YmsGRmIhXjw?rel=0&modestbranding=1" title="Best of UTMB 2024" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    <iframe src="https://www.youtube.com/embed/YmsGRmIhXjw?rel=0&modestbranding=1" frameborder="0" allowfullscreen></iframe>
                 </div>
             </div>
         </div>
@@ -667,65 +560,82 @@
               <div class="stats-badge">v7.4 RAPOR ÖZETİ</div>
           </div>
 
-          <div class="strategy-grid">
-              <div class="stat-card">
-                  <h3>LOGİSTİK & ERİŞİM <span style="color:var(--accent)">A+</span></h3>
-                  <div class="stat-value-big">3 BÜYÜKŞEHİR</div>
-                  <div class="stat-desc">
-                      Ankara, İstanbul ve Konya'ya YHT ile tam entegre.
-                      <br><br>
-                      <strong>✈️ Erişim:</strong> Havalimanı & Demiryolu<br>
-                      <strong>🏨 Kapasite:</strong> 5 Yıldızlı Otel Altyapısı (Tasigo, Rixos)
+          <div class="strategy-container">
+              
+              <div class="map-wrapper">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                      <h3 style="margin:0; font-size:14px; color:#fff;">📍 İNTERAKTİF PARKUR HARİTASI</h3>
+                      <div class="map-legend">
+                          <div class="legend-item"><span class="dot" style="background:#4caf50"></span> 20K</div>
+                          <div class="legend-item"><span class="dot" style="background:#ff9800"></span> 50K</div>
+                          <div class="legend-item"><span class="dot" style="background:#f44336"></span> 100K</div>
+                      </div>
+                  </div>
+                  <div id="raceMap"></div>
+                  <div style="font-size:10px; color:#666; margin-top:5px; text-align:right;">
+                      * Temsili Rotalar (Sündiken & Frig Vadisi Modellemesi)
                   </div>
               </div>
 
-              <div class="stat-card">
-                  <h3>PARKUR TEKNİK <span style="color:#4caf50">HAZIR</span></h3>
-                  <div class="stat-value-big">100K / 4000m+</div>
-                  <div class="stat-desc">
-                      Sündiken Dağları ve Frig Vadisi rotaları.
-                      <ul>
-                          <li>⛰️ <strong>Zirve:</strong> Türkmen Dağı (1826m)</li>
-                          <li>🏛️ <strong>Kültür:</strong> Frig Yolu Entegrasyonu</li>
-                          <li>🌲 <strong>Zemin:</strong> %85 Orman Yolu / Patika</li>
-                      </ul>
-                     
+              <div class="strategy-grid">
+                  <div class="stat-card">
+                      <h3>LOGİSTİK & ERİŞİM <span style="color:var(--accent)">A+</span></h3>
+                      <div class="stat-value-big">3 BÜYÜKŞEHİR</div>
+                      <div class="stat-desc">
+                          Ankara, İstanbul ve Konya'ya YHT ile tam entegre.
+                          <br><br>
+                          <strong>✈️ Erişim:</strong> Havalimanı & Demiryolu<br>
+                          <strong>🏨 Kapasite:</strong> 5 Yıldızlı Otel Altyapısı (Tasigo, Rixos)
+                      </div>
                   </div>
-              </div>
 
-              <div class="stat-card">
-                  <h3>İNSAN KAYNAĞI <span style="color:#2196f3">ÜNİVERSİTE</span></h3>
-                  <div class="stat-desc">
-                      Eskişehir'deki 3 üniversite ile stratejik gönüllü iş birliği modeli.
+                  <div class="stat-card">
+                      <h3>PARKUR TEKNİK <span style="color:#4caf50">HAZIR</span></h3>
+                      <div class="stat-value-big">100K / 4000m+</div>
+                      <div class="stat-desc">
+                          Sündiken Dağları ve Frig Vadisi rotaları.
+                          <ul>
+                              <li>⛰️ <strong>Zirve:</strong> Türkmen Dağı (1826m)</li>
+                              <li>🏛️ <strong>Kültür:</strong> Frig Yolu Entegrasyonu</li>
+                              <li>🌲 <strong>Zemin:</strong> %85 Orman Yolu / Patika</li>
+                          </ul>
+                      </div>
                   </div>
-                  <div class="uni-grid">
-                      <div class="uni-badge">A.Ü. (Turizm)</div>
-                      <div class="uni-badge">ESOGÜ (Sağlık)</div>
-                      <div class="uni-badge">ESTÜ (Spor)</div>
-                  </div>
-                  <div style="margin-top:10px; font-size:11px; color:#aaa;">
-                      * 350+ Akredite Gönüllü Potansiyeli
-                  </div>
-              </div>
 
-              <div class="stat-card" style="grid-column: span 1;">
-                  <h3>YOL HARİTASI</h3>
-                  <div class="roadmap-container">
-                      <div class="roadmap-item done">
-                          <div class="roadmap-date">2024 Q4</div>
-                          <div class="roadmap-title">Fizibilite & Rota Belirleme</div>
+                  <div class="stat-card">
+                      <h3>İNSAN KAYNAĞI <span style="color:#2196f3">ÜNİVERSİTE</span></h3>
+                      <div class="stat-desc">
+                          Eskişehir'deki 3 üniversite ile stratejik gönüllü iş birliği modeli.
                       </div>
-                      <div class="roadmap-item done">
-                          <div class="roadmap-date">2025 Q1</div>
-                          <div class="roadmap-title">UTMB® Ön Görüşmeler</div>
+                      <div class="uni-grid">
+                          <div class="uni-badge">A.Ü. (Turizm)</div>
+                          <div class="uni-badge">ESOGÜ (Sağlık)</div>
+                          <div class="uni-badge">ESTÜ (Spor)</div>
                       </div>
-                      <div class="roadmap-item">
-                          <div class="roadmap-date">2025 Q3</div>
-                          <div class="roadmap-title">Test Yarışı (Candidate Race)</div>
+                      <div style="margin-top:10px; font-size:11px; color:#aaa;">
+                          * 350+ Akredite Gönüllü Potansiyeli
                       </div>
-                      <div class="roadmap-item">
-                          <div class="roadmap-date">2026</div>
-                          <div class="roadmap-title">UTMB® World Series Event</div>
+                  </div>
+
+                  <div class="stat-card">
+                      <h3>YOL HARİTASI</h3>
+                      <div class="roadmap-container">
+                          <div class="roadmap-item done">
+                              <div class="roadmap-date">2024 Q4</div>
+                              <div class="roadmap-title">Fizibilite & Rota Belirleme</div>
+                          </div>
+                          <div class="roadmap-item done">
+                              <div class="roadmap-date">2025 Q1</div>
+                              <div class="roadmap-title">UTMB® Ön Görüşmeler</div>
+                          </div>
+                          <div class="roadmap-item">
+                              <div class="roadmap-date">2025 Q3</div>
+                              <div class="roadmap-title">Test Yarışı (Candidate Race)</div>
+                          </div>
+                          <div class="roadmap-item">
+                              <div class="roadmap-date">2026</div>
+                              <div class="roadmap-title">UTMB® World Series Event</div>
+                          </div>
                       </div>
                   </div>
               </div>
@@ -736,6 +646,8 @@
   </div>
 
   <audio id="audioPlayer" src="assets/slide_03_audio.m4a" preload="auto"></audio>
+  
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
   <script>
     // --- VERİLER ---
@@ -745,90 +657,50 @@
       { file: "assets/slide_03.webp", title: "Ekonomik Etki" },
       { file: "assets/slide_04.webp", title: "Operasyon" },
       { file: "assets/slide_05.webp", title: "Yetenek" },
-      { file: "assets/slide_06.webp", title: "Gönüllü Ordusu" },
-      { file: "assets/slide_07.webp", title: "ESOGÜ Roller" },
-      { file: "assets/slide_08.webp", title: "ESTÜ Spor Tek." },
-      { file: "assets/slide_09.webp", title: "Hizmet" },
-      { file: "assets/slide_10.webp", title: "Kazan-Kazan" },
-      { file: "assets/slide_11.webp", title: "Teşvik Modeli" },
       { file: "assets/slide_12.webp", title: "Yol Haritası" },
-      { file: "assets/slide_13.webp", title: "Sonraki Adımlar" },
       { file: "assets/slide_14.webp", title: "Kapanış" }
     ];
 
     const utmbEvents = [
         { name: "Dacia UTMB® Mont-Blanc", location: "Chamonix, Fransa 🇫🇷", date: "Ağustos", tag: "FINALS" },
-        { name: "Western States™ 100", location: "California, ABD 🇺🇸", date: "Haziran", tag: "MAJOR" },
-        { name: "La Sportiva® Lavaredo", location: "Cortina, İtalya 🇮🇹", date: "Haziran", tag: "MAJOR" },
-        { name: "Doi Inthanon Thailand", location: "Tayland 🇹🇭", date: "Aralık", tag: "MAJOR" },
         { name: "Cappadocia Ultra-Trail®", location: "Türkiye 🇹🇷", date: "Ekim", tag: "EVENT" },
-        { name: "Transvulcania by UTMB®", location: "İspanya 🇪🇸", date: "Mayıs", tag: "SERIES" },
-        { name: "Tarawera Ultra-Trail", location: "Yeni Zelanda 🇳🇿", date: "Şubat", tag: "SERIES" },
         { name: "Val d'Aran by UTMB®", location: "İspanya 🇪🇸", date: "Temmuz", tag: "SERIES" },
         { name: "Nice Côte d'Azur", location: "Fransa 🇫🇷", date: "Eylül", tag: "SERIES" },
-        { name: "Kodiak Ultra Marathons™", location: "ABD 🇺🇸", date: "Ekim", tag: "SERIES" },
-        { name: "Eiger Ultra-Trail™", location: "İsviçre 🇨🇭", date: "Temmuz", tag: "SERIES" },
-        { name: "Wildstrubel by UTMB®", location: "İsviçre 🇨🇭", date: "Eylül", tag: "SERIES" },
-        { name: "Julian Alps Trail Run", location: "Slovenya 🇸🇮", date: "Eylül", tag: "SERIES" },
-        { name: "Istria 100™ by UTMB®", location: "Hırvatistan 🇭🇷", date: "Nisan", tag: "SERIES" },
-        { name: "Mozart 100™ by UTMB®", location: "Avusturya 🇦🇹", date: "Haziran", tag: "SERIES" },
-        { name: "Chianti Ultra Trail", location: "İtalya 🇮🇹", date: "Mart", tag: "SERIES" },
-        { name: "Ultra-Trail Snowdonia", location: "Galler 🇬🇧", date: "Mayıs", tag: "SERIES" },
-        { name: "Alsace Grand Est", location: "Fransa 🇫🇷", date: "Mayıs", tag: "SERIES" },
-        { name: "Trail 100 Andorra", location: "Andorra 🇦🇩", date: "Haziran", tag: "SERIES" },
-        { name: "Restonica Trail", location: "Korsika 🇫🇷", date: "Temmuz", tag: "SERIES" },
-        { name: "Trail du Saint-Jacques", location: "Fransa 🇫🇷", date: "Haziran", tag: "SERIES" },
-        { name: "Katzsprung by UTMB®", location: "Almanya 🇩🇪", date: "Mayıs", tag: "SERIES" },
-        { name: "Speedgoat™ Mountain Races", location: "Utah, ABD 🇺🇸", date: "Temmuz", tag: "SERIES" },
-        { name: "The Canyons Endurance", location: "ABD 🇺🇸", date: "Nisan", tag: "SERIES" },
-        { name: "Grindstone Trail Running", location: "ABD 🇺🇸", date: "Eylül", tag: "SERIES" },
-        { name: "Desert RATS™", location: "ABD 🇺🇸", date: "Nisan", tag: "SERIES" },
-        { name: "Puerto Vallarta México", location: "Meksika 🇲🇽", date: "Kasım", tag: "SERIES" },
-        { name: "Paraty Brazil by UTMB®", location: "Brezilya 🇧🇷", date: "Eylül", tag: "SERIES" },
-        { name: "Valhoges by UTMB®", location: "Arjantin 🇦🇷", date: "Mayıs", tag: "SERIES" },
-        { name: "Quito Trail by UTMB®", location: "Ekvador 🇪🇨", date: "Ağustos", tag: "SERIES" },
-        { name: "Ultra-Trail Kosciuszko", location: "Avustralya 🇦🇺", date: "Aralık", tag: "SERIES" },
-        { name: "Ultra-Trail Mount Yun", location: "Çin 🇨🇳", date: "Ekim", tag: "SERIES" },
-        { name: "TransJeju by UTMB®", location: "Güney Kore 🇰🇷", date: "Ekim", tag: "SERIES" },
-        { name: "Amazean Jungle Thailand", location: "Tayland 🇹🇭", date: "Mayıs", tag: "SERIES" },
-        { name: "Ultra-Trail Ninghai", location: "Çin 🇨🇳", date: "Nisan", tag: "SERIES" },
-        { name: "Mauritius by UTMB®", location: "Mauritius 🇲🇺", date: "Haziran", tag: "SERIES" },
-        { name: "Mountain Ultra-Trail", location: "Güney Afrika 🇿🇦", date: "Mayıs", tag: "SERIES" }
+        { name: "Eiger Ultra-Trail™", location: "İsviçre 🇨🇭", date: "Temmuz", tag: "SERIES" }
     ];
 
     let currentIndex = 0;
     const imgEl = document.getElementById('currentSlide');
     
-    // VIEW ELEMENTLERİ
+    // VIEWS
     const dashView = document.getElementById('dashboardView');
     const slideView = document.getElementById('slideView');
     const tvView = document.getElementById('tvView');
-    const strategyView = document.getElementById('strategyView'); // YENİ
+    const strategyView = document.getElementById('strategyView');
     
-    // BUTONLAR
+    // BUTTONS
     const btnHome = document.getElementById('btnHome');
     const btnTv = document.getElementById('btnTv');
-    const btnStrategy = document.getElementById('btnStrategy'); // YENİ
+    const btnStrategy = document.getElementById('btnStrategy');
     const btnPodcast = document.getElementById('btnPodcast');
     
     const audioPlayer = document.getElementById('audioPlayer');
     const zoomContainer = document.getElementById('zoomContainer');
 
-    // --- RESİM YÜKLENEMEZSE (Placeholder) ---
-    imgEl.onerror = function() {
-        console.warn("Görsel eksik: " + this.src);
-    };
+    // --- MAP INITIALIZATION VARIABLES ---
+    let mapInitialized = false;
+    let map;
 
-    // --- NAVİGASYON ---
+    // --- NAVIGATION FUNC ---
     function hideAllViews() {
         slideView.classList.remove('active-view');
         dashView.classList.remove('active-view');
         tvView.classList.remove('active-view');
-        strategyView.classList.remove('active-view'); // YENİ
+        strategyView.classList.remove('active-view');
         
         btnHome.classList.remove('active');
         btnTv.classList.remove('active');
-        btnStrategy.classList.remove('active'); // YENİ
+        btnStrategy.classList.remove('active');
         document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
     }
 
@@ -846,12 +718,96 @@
         resetZoom();
     }
 
-    // YENİ STRATEJİ FONKSİYONU
     function showStrategy() {
         hideAllViews();
         strategyView.classList.add('active-view');
         btnStrategy.classList.add('active');
         resetZoom();
+
+        // Harita Görünür Olduğunda Yükle
+        setTimeout(() => {
+            if (!mapInitialized) {
+                initRaceMap();
+            } else {
+                map.invalidateSize(); // Boyutlandırma hatasını önle
+            }
+        }, 100);
+    }
+
+    // --- LEAFLET MAP LOGIC (RACE ROUTES) ---
+    function initRaceMap() {
+        // Eskişehir Koordinatları (Odunpazarı civarı Start)
+        const startPoint = [39.760, 30.525]; 
+        
+        map = L.map('raceMap').setView(startPoint, 11);
+
+        // Dark/Cyber Temaya Uygun Harita Katmanı (CartoDB Dark Matter)
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap &copy; CARTO',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);
+
+        // START/FINISH ICON
+        const startIcon = L.divIcon({
+            className: 'custom-div-icon',
+            html: "<div style='background-color:#fff; width:12px; height:12px; border-radius:50%; border:2px solid #000; box-shadow:0 0 5px #fff;'></div>",
+            iconSize: [12, 12],
+            iconAnchor: [6, 6]
+        });
+
+        // 20K ROTASI (Yeşil) - Temsili Döngü
+        const route20k = [
+            startPoint,
+            [39.750, 30.500], [39.740, 30.490], [39.730, 30.510], // Kent Ormanı
+            [39.740, 30.540], startPoint
+        ];
+
+        // 50K ROTASI (Turuncu) - Frig Vadisi Girişi
+        const route50k = [
+            startPoint,
+            [39.750, 30.500], [39.720, 30.450], // Orman içi
+            [39.680, 30.400], [39.650, 30.450], // Musaözü Göleti Tarafı
+            [39.700, 30.550], [39.740, 30.540], startPoint
+        ];
+
+        // 100K ROTASI (Kırmızı) - Sündiken Tırmanışı
+        const route100k = [
+            startPoint,
+            [39.750, 30.500], [39.720, 30.450], 
+            [39.600, 30.350], [39.550, 30.300], // Derin Vadi
+            [39.500, 30.400], [39.550, 30.600], // Tırmanış
+            [39.650, 30.700], [39.720, 30.600], startPoint
+        ];
+
+        // Rotaları Çiz
+        const poly20k = L.polyline(route20k, {color: '#4caf50', weight: 4, opacity: 0.8}).addTo(map);
+        const poly50k = L.polyline(route50k, {color: '#ff9800', weight: 4, opacity: 0.8}).addTo(map);
+        const poly100k = L.polyline(route100k, {color: '#f44336', weight: 4, opacity: 0.8}).addTo(map);
+
+        // Start Noktası İşaretçisi
+        L.marker(startPoint, {icon: startIcon}).addTo(map)
+            .bindPopup("<b>🏁 START / FINISH</b><br>Odunpazarı Meydanı").openPopup();
+
+        // Check Points (Örnek)
+        const cpIcon = L.divIcon({
+            className: 'custom-div-icon',
+            html: "<div style='background-color:#e94e1b; width:8px; height:8px; border-radius:50%;'></div>",
+            iconSize: [8, 8]
+        });
+        
+        L.marker([39.680, 30.400], {icon: cpIcon}).addTo(map).bindPopup("CP 1: Musaözü (50K/100K)");
+        L.marker([39.550, 30.300], {icon: cpIcon}).addTo(map).bindPopup("CP 3: Frig Vadisi (100K)");
+
+        // Katman Kontrolü (Aç/Kapa)
+        const overlayMaps = {
+            "20K Parkuru (Yeşil)": poly20k,
+            "50K Parkuru (Turuncu)": poly50k,
+            "100K Parkuru (Kırmızı)": poly100k
+        };
+        L.control.layers(null, overlayMaps, {collapsed: false, position: 'topright'}).addTo(map);
+
+        mapInitialized = true;
     }
 
     function showSlideViewer(index) {
@@ -861,7 +817,6 @@
 
         hideAllViews();
         slideView.classList.add('active-view');
-
         resetZoom();
 
         imgEl.classList.remove('visible');
@@ -901,7 +856,6 @@
     document.getElementById('btnNext').onclick = (e) => { e.stopPropagation(); showSlideViewer(currentIndex + 1); };
     document.getElementById('btnPrev').onclick = (e) => { e.stopPropagation(); showSlideViewer(currentIndex - 1); };
 
-    // --- PODCAST OYNATICI ---
     function togglePodcast() {
         if (audioPlayer.paused) {
             audioPlayer.play();
@@ -914,108 +868,16 @@
         }
     }
 
-    // --- ZOOM & PAN ENGINE ---
-    let scale = 1;
-    let panning = false;
-    let pointX = 0;
-    let pointY = 0;
-    let start = { x: 0, y: 0 };
-    let lastTouch = 0; 
+    let scale = 1; let panning = false; let pointX = 0; let pointY = 0; let start = { x: 0, y: 0 };
+    function setTransform() { imgEl.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`; }
+    function resetZoom() { scale = 1; pointX = 0; pointY = 0; setTransform(); }
 
-    function setTransform() {
-        imgEl.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
-    }
-
-    function resetZoom() {
-        scale = 1;
-        pointX = 0;
-        pointY = 0;
-        setTransform();
-    }
-
-    // Mouse Zoom
-    zoomContainer.addEventListener('wheel', (e) => {
-        e.preventDefault();
-        const xs = (e.clientX - pointX) / scale;
-        const ys = (e.clientY - pointY) / scale;
-        const delta = -e.deltaY;
-        (delta > 0) ? (scale *= 1.1) : (scale /= 1.1);
-        if (scale < 1) scale = 1;
-        if (scale > 5) scale = 5;
-        pointX = e.clientX - xs * scale;
-        pointY = e.clientY - ys * scale;
-        if(scale === 1) { pointX = 0; pointY = 0; }
-        setTransform();
-    });
-
-    // Touch Gestures
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let initialPinchDist = 0;
-    let initialScale = 1;
-
-    zoomContainer.addEventListener('touchstart', (e) => {
-        if (e.touches.length === 2) {
-            e.preventDefault(); 
-            initialPinchDist = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY);
-            initialScale = scale;
-        } else if (e.touches.length === 1) {
-            start.x = e.touches[0].clientX - pointX;
-            start.y = e.touches[0].clientY - pointY;
-            touchStartX = e.touches[0].clientX;
-            panning = true;
-            
-            const now = new Date().getTime();
-            if (now - lastTouch < 300) {
-                if (scale > 1) resetZoom();
-                else { scale = 2.5; setTransform(); }
-            }
-            lastTouch = now;
-        }
-    });
-
-    zoomContainer.addEventListener('touchmove', (e) => {
-        if (e.touches.length === 2) {
-            e.preventDefault();
-            const dist = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY);
-            scale = initialScale * (dist / initialPinchDist);
-            if(scale < 1) scale = 1;
-            if(scale > 5) scale = 5;
-            setTransform();
-        } else if (e.touches.length === 1 && panning && scale > 1) {
-            e.preventDefault();
-            pointX = e.touches[0].clientX - start.x;
-            pointY = e.touches[0].clientY - start.y;
-            setTransform();
-        }
-    });
-
-    zoomContainer.addEventListener('touchend', (e) => {
-        panning = false;
-        // Eğer Zoom yoksa (Scale 1), Swipe (Geçiş) kontrolü yap
-        if (scale === 1 && e.changedTouches.length === 1) {
-            const touchEndX = e.changedTouches[0].clientX;
-            const diffX = touchEndX - touchStartX;
-            if (Math.abs(diffX) > 50) {
-                if (diffX < 0) showSlideViewer(currentIndex + 1);
-                else showSlideViewer(currentIndex - 1);
-            }
-        }
-        if (scale < 1) resetZoom();
-    });
-
-    // Desktop Pan
-    zoomContainer.addEventListener('mousedown', (e) => {
-        if(scale > 1) { e.preventDefault(); start.x = e.clientX - pointX; start.y = e.clientY - pointY; panning = true; }
-    });
-    zoomContainer.addEventListener('mousemove', (e) => {
-        if (!panning) return;
-        e.preventDefault(); pointX = e.clientX - start.x; pointY = e.clientY - start.y; setTransform();
-    });
+    zoomContainer.addEventListener('mousedown', (e) => { if(scale > 1) { e.preventDefault(); start.x = e.clientX - pointX; start.y = e.clientY - pointY; panning = true; } });
+    zoomContainer.addEventListener('mousemove', (e) => { if (!panning) return; e.preventDefault(); pointX = e.clientX - start.x; pointY = e.clientY - start.y; setTransform(); });
     zoomContainer.addEventListener('mouseup', () => { panning = false; });
-    zoomContainer.addEventListener('mouseleave', () => { panning = false; });
+    zoomContainer.addEventListener('wheel', (e) => { e.preventDefault(); const xs = (e.clientX - pointX) / scale; const ys = (e.clientY - pointY) / scale; const delta = -e.deltaY; (delta > 0) ? (scale *= 1.1) : (scale /= 1.1); if (scale < 1) scale = 1; if (scale > 5) scale = 5; pointX = e.clientX - xs * scale; pointY = e.clientY - ys * scale; if(scale === 1) { pointX = 0; pointY = 0; } setTransform(); });
 
-    // --- RENDER ---
+    // RENDER EVENTS
     function renderEvents() {
         const container = document.getElementById('events-container');
         container.innerHTML = ''; 
@@ -1045,14 +907,6 @@
         return '#444';
     }
 
-    document.addEventListener('keydown', (e) => {
-        if(slideView.classList.contains('active-view')) {
-            if(e.key === 'ArrowRight') showSlideViewer(currentIndex + 1);
-            if(e.key === 'ArrowLeft') showSlideViewer(currentIndex - 1);
-        }
-    });
-
-    // BAŞLATMA
     initMenu();
     renderEvents();
     showSlideViewer(0); 
