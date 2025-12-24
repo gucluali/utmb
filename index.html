@@ -41,6 +41,15 @@
     .brand { font-weight: 800; font-size: 18px; display: flex; align-items: center; gap: 12px; color: white; }
     .brand-icon { width: 24px; height: 24px; background: var(--accent); border-radius: 4px; display: grid; place-items: center; font-size: 12px; box-shadow: 0 0 15px var(--accent-glow); }
     .brand span { color: var(--accent); }
+    
+    .header-right { display: flex; gap: 10px; align-items: center; }
+    .investor-btn {
+        background: transparent; border: 1px solid var(--border); color: var(--text-muted);
+        padding: 5px 12px; border-radius: 6px; font-size: 11px; cursor: not-allowed;
+        display: flex; align-items: center; gap: 5px; transition: 0.3s;
+    }
+    .investor-btn:hover { border-color: var(--accent); color: white; }
+
     .header-center-title {
         position: absolute; left: 50%; transform: translateX(-50%);
         font-weight: 900; font-size: 14px; text-transform: uppercase;
@@ -48,7 +57,6 @@
         padding: 4px 15px; border-radius: 50px; background: rgba(0,0,0,0.6);
     }
     .header-center-title span { color: var(--accent); }
-    .version-text { font-size: 10px; color: #666; }
 
     /* LAYOUT */
     .layout { display: flex; flex: 1; height: calc(100vh - 60px); overflow: hidden; position: relative; }
@@ -66,7 +74,18 @@
     }
     .menu-item:hover { background: rgba(255,255,255,0.05); color: white; }
     .menu-item.active { background: rgba(233, 78, 27, 0.15); color: white; border: 1px solid rgba(233, 78, 27, 0.3); }
+    
     .sidebar-footer { padding: 20px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 12px; }
+    
+    .contact-area {
+        margin-top: 10px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05);
+        display: flex; gap: 10px; justify-content: center;
+    }
+    .icon-btn {
+        background: rgba(255,255,255,0.05); border: none; color: #aaa; width: 36px; height: 36px;
+        border-radius: 8px; cursor: pointer; transition: 0.2s; display: grid; place-items: center;
+    }
+    .icon-btn:hover { background: var(--accent); color: white; }
 
     /* BUTTONS */
     .nav-btn-main {
@@ -79,8 +98,16 @@
     .nav-btn-main:active { transform: scale(0.96); }
     .nav-btn-main:not(.active) { background: rgba(255,255,255,0.05); border: 1px solid var(--border); opacity: 0.8; box-shadow: none; }
     .nav-btn-main.active { opacity: 1; border: 1px solid var(--accent); }
+    
     .nav-btn-tv { background: linear-gradient(45deg, #1a1a1a, #333); }
     .nav-btn-strategy { background: linear-gradient(45deg, #1a1f26, #2a2f38); }
+    
+    /* DL Button */
+    .dl-btn {
+        background: transparent; border: 1px dashed #555; color: #888; font-size: 11px;
+        width: 100%; padding: 10px; border-radius: 8px; cursor: pointer; margin-top: 5px;
+    }
+    .dl-btn:hover { border-color: var(--accent); color: var(--accent); }
 
     /* MAIN AREA */
     main { flex: 1; background: var(--bg-dark); position: relative; overflow: hidden; }
@@ -98,10 +125,20 @@
     .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
     .dash-title h1 { margin: 0; font-size: 24px; font-weight: 300; }
     .dash-title span { font-weight: 800; color: var(--accent); }
+    
+    /* COUNTDOWN */
+    .countdown-box {
+        display: flex; gap: 15px; align-items: center; background: rgba(233,78,27,0.1);
+        padding: 8px 15px; border-radius: 8px; border: 1px solid rgba(233,78,27,0.3);
+    }
+    .cd-item { text-align: center; }
+    .cd-val { font-size: 16px; font-weight: 800; color: white; line-height: 1; }
+    .cd-label { font-size: 8px; color: var(--accent); text-transform: uppercase; }
+
     .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
     .event-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 15px; height: 140px; display: flex; flex-direction: column; justify-content: space-between; }
     
-    /* STRATEGY GRID (NO MAP) */
+    /* STRATEGY GRID */
     .strategy-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
     .stat-card { background: linear-gradient(145deg, #1a1f26, #161b22); border: 1px solid rgba(255,255,255,0.05); border-left: 3px solid var(--accent); border-radius: 12px; padding: 20px; }
     .stat-value-big { font-size: 32px; font-weight: 800; color: white; margin-bottom: 5px; }
@@ -115,9 +152,12 @@
     .roadmap-date { font-size: 10px; color: var(--accent); font-weight: bold; }
     .roadmap-title { font-size: 13px; color: white; font-weight: 600; }
 
-    /* UNIVERSITIES */
-    .uni-grid { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
-    .uni-badge { background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 4px; font-size: 10px; color: white; border: 1px solid rgba(255,255,255,0.1); }
+    /* PARTNERS LOGO STRIP */
+    .partner-strip {
+        display: flex; gap: 15px; margin-top: 20px; opacity: 0.6; grayscale: 100%;
+        border-top: 1px solid var(--border); padding-top: 15px;
+    }
+    .p-logo { font-size: 10px; border: 1px solid #444; padding: 5px 10px; border-radius: 4px; color: #888; }
 
     /* SLIDE VIEWER */
     .slide-viewer-container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; position: relative; }
@@ -126,8 +166,11 @@
     .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); color: white; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; font-size: 18px;}
     .nav-btn.prev { left: 10px; } .nav-btn.next { right: 10px; }
 
-    /* TV Video */
-    .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; background: black; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+    /* TV Video Grid */
+    .tv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; height: 100%; align-content: center; }
+    .tv-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; }
+    .tv-header { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); font-weight: 700; font-size: 14px; color: white; display: flex; justify-content: space-between; align-items: center; }
+    .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; background: black; }
     .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
 
     /* MOBILE */
@@ -136,14 +179,19 @@
       header { padding: 0 15px; height: 50px; }
       .brand { font-size: 14px; max-width: 60%; }
       .header-center-title { display: block !important; position: static; transform: none; font-size: 10px; margin-left: auto; }
-      .version-text { display: none; }
+      .investor-btn { display: none; }
       aside { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border); flex-direction: column; padding: 0; order: -1; }
       .sidebar-footer { padding: 8px; border-top: none; flex-direction: row; gap: 6px; order: 1; overflow-x: auto; }
       .nav-btn-main { padding: 8px 6px; font-size: 10px; min-width: 90px; }
+      .contact-area { display: none; } /* Mobilde yer kaplamasın */
       .scrollable-list { display: flex; flex-direction: row; overflow-x: auto; padding: 5px 10px; gap: 8px; width: 100%; scroll-snap-type: x mandatory; order: 2; border-top: 1px solid rgba(255,255,255,0.05); }
       .menu-item { min-width: 120px; margin: 0; flex-direction: column; justify-content: center; text-align: center; height: 60px; scroll-snap-align: start; border: 1px solid var(--border); }
       .view-section { padding: 15px; padding-bottom: 80px; }
       .nav-btn { display: none; }
+      
+      .tv-grid { grid-template-columns: 1fr; display: flex; flex-direction: column; justify-content: flex-start; gap: 20px; }
+      .tv-card { flex-shrink: 0; }
+      .dash-header { flex-direction: column; align-items: flex-start; gap: 10px; }
     }
   </style>
 </head>
@@ -152,7 +200,9 @@
   <header>
     <div class="brand"><div class="brand-icon">➜</div> UTMB® <span>Eskişehir</span></div>
     <div class="header-center-title">ALİ <span>GÜÇLÜ</span></div>
-    <div class="version-text">v7.8 Lite</div>
+    <div class="header-right">
+        <button class="investor-btn" title="Yetki Gerekir">🔒 INVESTOR LOGIN</button>
+    </div>
   </header>
 
   <div class="layout">
@@ -162,6 +212,14 @@
           <button class="nav-btn-main nav-btn-tv" id="btnTv" onclick="switchView('tv')"><span>📺</span> UTMB® TV</button>
           <button class="nav-btn-main nav-btn-strategy" id="btnStrategy" onclick="switchView('strategy')"><span>📊</span> STRATEJİ & ANALİZ</button>
           <button class="nav-btn-main" id="btnPodcast" onclick="togglePodcast()"><span>🎙️</span> PODCAST</button>
+          
+          <button class="dl-btn" onclick="alert('PDF Sunum İndiriliyor...')">📥 SUNUMU İNDİR (PDF)</button>
+          
+          <div class="contact-area">
+              <button class="icon-btn" title="E-Posta">✉️</button>
+              <button class="icon-btn" title="LinkedIn">in</button>
+              <button class="icon-btn" title="GitHub">🐙</button>
+          </div>
       </div>
       <div class="scrollable-list" style="order: 2;">
         <ul class="menu-list" id="menuList" style="display:contents;"></ul>
@@ -184,14 +242,32 @@
       </div>
 
       <div id="dashboardView" class="view-section">
-          <div class="dash-header"><div class="dash-title"><h1>UTMB® <span>Series</span></h1></div></div>
+          <div class="dash-header">
+              <div class="dash-title"><h1>UTMB® <span>Series</span></h1></div>
+              <div class="countdown-box">
+                  <div class="cd-item"><div class="cd-val" id="cd-days">480</div><div class="cd-label">GÜN</div></div>
+                  <div class="cd-item"><div class="cd-val" id="cd-hours">12</div><div class="cd-label">SAAT</div></div>
+                  <div style="font-size:10px; color:#666; margin-left:5px;">HEDEF START<br>MAYIS 2026</div>
+              </div>
+          </div>
           <div class="events-grid" id="events-container"></div>
       </div>
 
       <div id="tvView" class="view-section">
         <div class="dash-header"><div class="dash-title"><h1>UTMB® <span>TV</span></h1></div></div>
-        <div class="video-wrapper">
-            <iframe src="https://www.youtube.com/embed/Q4HzcbK730A?rel=0&modestbranding=1" allowfullscreen></iframe>
+        <div class="tv-grid">
+            <div class="tv-card">
+                <div class="tv-header">KURUMSAL GÜÇ & VİZYON</div>
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/Q4HzcbK730A?rel=0&modestbranding=1" allowfullscreen></iframe>
+                </div>
+            </div>
+            <div class="tv-card">
+                <div class="tv-header">SAF ADRENALİN & DUYGU</div>
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/YmsGRmIhXjw?rel=0&modestbranding=1" allowfullscreen></iframe>
+                </div>
+            </div>
         </div>
       </div>
 
@@ -228,10 +304,10 @@
                   <div class="stat-desc">
                       Eskişehir'deki 3 üniversite ile stratejik gönüllü iş birliği.
                   </div>
-                  <div class="uni-grid">
-                      <div class="uni-badge">A.Ü. (Turizm)</div>
-                      <div class="uni-badge">ESOGÜ (Sağlık)</div>
-                      <div class="uni-badge">ESTÜ (Spor)</div>
+                  <div class="partner-strip">
+                      <div class="p-logo">ANADOLU ÜNİ.</div>
+                      <div class="p-logo">ESOGÜ</div>
+                      <div class="p-logo">ESTÜ</div>
                   </div>
               </div>
 
@@ -287,6 +363,22 @@
     let currentIndex = 0;
     const imgEl = document.getElementById('currentSlide');
     
+    // COUNTDOWN LOGIC (Mayıs 2026 Hedefi)
+    function updateCountdown() {
+        const target = new Date("May 15, 2026 00:00:00").getTime();
+        const now = new Date().getTime();
+        const diff = target - now;
+        
+        if (diff > 0) {
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            document.getElementById("cd-days").innerText = days;
+            document.getElementById("cd-hours").innerText = hours;
+        }
+    }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
     // NAVIGATION
     function switchView(viewName) {
         document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
