@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <title>Eskişehir UTMB® Strateji Portalı</title>
   
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRS9BMY=" crossorigin="" />
-  
   <style>
     :root {
       --bg-dark: #090a0c;
@@ -26,7 +24,8 @@
     body {
       margin: 0; padding: 0;
       background-color: var(--bg-dark);
-      font-family: 'Inter', sans-serif;
+      background-image: radial-gradient(circle at 50% 0%, rgba(233,78,27,0.08) 0%, transparent 60%);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
       color: var(--text-main);
       height: 100vh; display: flex; flex-direction: column; overflow: hidden;
     }
@@ -40,7 +39,7 @@
       padding-top: var(--safe-area-top);
     }
     .brand { font-weight: 800; font-size: 18px; display: flex; align-items: center; gap: 12px; color: white; }
-    .brand-icon { width: 24px; height: 24px; background: var(--accent); border-radius: 4px; display: grid; place-items: center; font-size: 12px; }
+    .brand-icon { width: 24px; height: 24px; background: var(--accent); border-radius: 4px; display: grid; place-items: center; font-size: 12px; box-shadow: 0 0 15px var(--accent-glow); }
     .brand span { color: var(--accent); }
     .header-center-title {
         position: absolute; left: 50%; transform: translateX(-50%);
@@ -49,6 +48,7 @@
         padding: 4px 15px; border-radius: 50px; background: rgba(0,0,0,0.6);
     }
     .header-center-title span { color: var(--accent); }
+    .version-text { font-size: 10px; color: #666; }
 
     /* LAYOUT */
     .layout { display: flex; flex: 1; height: calc(100vh - 60px); overflow: hidden; position: relative; }
@@ -74,67 +74,76 @@
         border: none; color: white; padding: 14px; border-radius: 12px;
         cursor: pointer; display: flex; align-items: center; justify-content: center;
         gap: 8px; font-weight: 800; font-size: 13px; transition: 0.2s;
+        box-shadow: 0 4px 15px rgba(233,78,27,0.3);
     }
     .nav-btn-main:active { transform: scale(0.96); }
-    .nav-btn-main:not(.active) { background: rgba(255,255,255,0.05); border: 1px solid var(--border); opacity: 0.8; }
-    .nav-btn-main.active { opacity: 1; border: 1px solid var(--accent); box-shadow: 0 4px 15px rgba(233,78,27,0.4); }
+    .nav-btn-main:not(.active) { background: rgba(255,255,255,0.05); border: 1px solid var(--border); opacity: 0.8; box-shadow: none; }
+    .nav-btn-main.active { opacity: 1; border: 1px solid var(--accent); }
     .nav-btn-tv { background: linear-gradient(45deg, #1a1a1a, #333); }
     .nav-btn-strategy { background: linear-gradient(45deg, #1a1f26, #2a2f38); }
 
-    /* MAIN AREA & VIEWS */
+    /* MAIN AREA */
     main { flex: 1; background: var(--bg-dark); position: relative; overflow: hidden; }
 
-    /* CRITICAL FIX: DISPLAY NONE instead of OPACITY */
     .view-section {
-        display: none; /* Gizli */
-        flex-direction: column;
-        width: 100%; height: 100%;
-        padding: 30px; overflow-y: auto;
-        animation: fadeIn 0.3s ease;
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        padding: 30px; padding-bottom: 100px; overflow-y: auto;
+        opacity: 0; pointer-events: none; transform: translateY(20px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        display: flex; flex-direction: column;
     }
-    .view-section.active-view {
-        display: flex; /* Görünür */
-    }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .view-section.active-view { opacity: 1; pointer-events: all; transform: translateY(0); z-index: 5; }
 
-    /* DASHBOARD & GRIDS */
+    /* DASHBOARD */
     .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
     .dash-title h1 { margin: 0; font-size: 24px; font-weight: 300; }
     .dash-title span { font-weight: 800; color: var(--accent); }
-    .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; padding-bottom: 50px; }
+    .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
     .event-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 15px; height: 140px; display: flex; flex-direction: column; justify-content: space-between; }
     
-    /* STRATEGY & MAP */
-    .strategy-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
+    /* STRATEGY GRID (NO MAP) */
+    .strategy-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
     .stat-card { background: linear-gradient(145deg, #1a1f26, #161b22); border: 1px solid rgba(255,255,255,0.05); border-left: 3px solid var(--accent); border-radius: 12px; padding: 20px; }
+    .stat-value-big { font-size: 32px; font-weight: 800; color: white; margin-bottom: 5px; }
+    .stat-desc { font-size: 12px; color: #8b949e; line-height: 1.5; }
     
-    #raceMap {
-        height: 400px; width: 100%; border-radius: 12px; border: 1px solid var(--border);
-        background: #222; /* Yüklenirken gri görünmesin */
-    }
-    .map-wrapper { background: var(--card-bg); padding: 15px; border-radius: 12px; border: 1px solid var(--border); }
+    /* ROADMAP */
+    .roadmap-container { margin-top: 10px; border-left: 2px solid rgba(233, 78, 27, 0.3); padding-left: 20px; }
+    .roadmap-item { position: relative; margin-bottom: 20px; }
+    .roadmap-item::before { content: ''; position: absolute; left: -26px; top: 5px; width: 10px; height: 10px; background: var(--bg-dark); border: 2px solid var(--accent); border-radius: 50%; }
+    .roadmap-item.done::before { background: var(--accent); }
+    .roadmap-date { font-size: 10px; color: var(--accent); font-weight: bold; }
+    .roadmap-title { font-size: 13px; color: white; font-weight: 600; }
+
+    /* UNIVERSITIES */
+    .uni-grid { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+    .uni-badge { background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 4px; font-size: 10px; color: white; border: 1px solid rgba(255,255,255,0.1); }
 
     /* SLIDE VIEWER */
     .slide-viewer-container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; position: relative; }
     .viewer-frame { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative; }
     img#currentSlide { max-width: 100%; max-height: 100%; object-fit: contain; }
-    .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); color: white; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; }
+    .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); color: white; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; font-size: 18px;}
     .nav-btn.prev { left: 10px; } .nav-btn.next { right: 10px; }
+
+    /* TV Video */
+    .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; background: black; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+    .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
 
     /* MOBILE */
     @media (max-width: 768px) {
       .layout { flex-direction: column; }
       header { padding: 0 15px; height: 50px; }
       .brand { font-size: 14px; max-width: 60%; }
-      .header-center-title { position: static; transform: none; font-size: 10px; margin-left: auto; }
+      .header-center-title { display: block !important; position: static; transform: none; font-size: 10px; margin-left: auto; }
+      .version-text { display: none; }
       aside { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border); flex-direction: column; padding: 0; order: -1; }
       .sidebar-footer { padding: 8px; border-top: none; flex-direction: row; gap: 6px; order: 1; overflow-x: auto; }
       .nav-btn-main { padding: 8px 6px; font-size: 10px; min-width: 90px; }
-      .scrollable-list { display: flex; flex-direction: row; overflow-x: auto; padding: 5px 10px; gap: 8px; width: 100%; scroll-snap-type: x mandatory; order: 2; }
-      .menu-item { min-width: 120px; margin: 0; flex-direction: column; justify-content: center; text-align: center; height: 60px; scroll-snap-align: start; }
+      .scrollable-list { display: flex; flex-direction: row; overflow-x: auto; padding: 5px 10px; gap: 8px; width: 100%; scroll-snap-type: x mandatory; order: 2; border-top: 1px solid rgba(255,255,255,0.05); }
+      .menu-item { min-width: 120px; margin: 0; flex-direction: column; justify-content: center; text-align: center; height: 60px; scroll-snap-align: start; border: 1px solid var(--border); }
       .view-section { padding: 15px; padding-bottom: 80px; }
       .nav-btn { display: none; }
-      #raceMap { height: 300px; }
     }
   </style>
 </head>
@@ -143,6 +152,7 @@
   <header>
     <div class="brand"><div class="brand-icon">➜</div> UTMB® <span>Eskişehir</span></div>
     <div class="header-center-title">ALİ <span>GÜÇLÜ</span></div>
+    <div class="version-text">v7.8 Lite</div>
   </header>
 
   <div class="layout">
@@ -150,7 +160,7 @@
       <div class="sidebar-footer" style="order: 1;">
           <button class="nav-btn-main" id="btnHome" onclick="switchView('dashboard')"><span>🌍</span> KÜRESEL TAKVİM</button>
           <button class="nav-btn-main nav-btn-tv" id="btnTv" onclick="switchView('tv')"><span>📺</span> UTMB® TV</button>
-          <button class="nav-btn-main nav-btn-strategy" id="btnStrategy" onclick="switchView('strategy')"><span>📊</span> STRATEJİ & HARİTA</button>
+          <button class="nav-btn-main nav-btn-strategy" id="btnStrategy" onclick="switchView('strategy')"><span>📊</span> STRATEJİ & ANALİZ</button>
           <button class="nav-btn-main" id="btnPodcast" onclick="togglePodcast()"><span>🎙️</span> PODCAST</button>
       </div>
       <div class="scrollable-list" style="order: 2;">
@@ -180,27 +190,71 @@
 
       <div id="tvView" class="view-section">
         <div class="dash-header"><div class="dash-title"><h1>UTMB® <span>TV</span></h1></div></div>
-        <iframe width="100%" height="300" src="https://www.youtube.com/embed/Q4HzcbK730A" frameborder="0" allowfullscreen></iframe>
+        <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/Q4HzcbK730A?rel=0&modestbranding=1" allowfullscreen></iframe>
+        </div>
       </div>
 
       <div id="strategyView" class="view-section">
-          <div class="dash-header"><div class="dash-title"><h1>PROJE <span>HARİTASI</span></h1></div></div>
+          <div class="dash-header"><div class="dash-title"><h1>PROJE <span>FİZİBİLİTESİ</span></h1></div></div>
           
-          <div class="map-wrapper">
-              <h3 style="color:white; margin-top:0;">📍 PARKUR HARİTASI (v7.7 Fix)</h3>
-              <div id="raceMap"></div>
-          </div>
-
           <div class="strategy-grid">
               <div class="stat-card">
-                  <h3 style="color:#aaa;">LOGİSTİK</h3>
-                  <div style="font-size:24px; font-weight:bold; color:white;">YHT & HAVALİMANI</div>
-                  <div style="color:#888; font-size:12px;">Ankara ve İstanbul'a hızlı erişim.</div>
+                  <h3>LOGİSTİK & ERİŞİM <span style="color:var(--accent)">A+</span></h3>
+                  <div class="stat-value-big">3 BÜYÜKŞEHİR</div>
+                  <div class="stat-desc">
+                      Ankara, İstanbul ve Konya'ya YHT ile tam entegre.
+                      <br><br>
+                      <strong>✈️ Erişim:</strong> Havalimanı & Demiryolu<br>
+                      <strong>🏨 Kapasite:</strong> 5 Yıldızlı Otel Altyapısı (Tasigo, Rixos)
+                  </div>
               </div>
+
               <div class="stat-card">
-                  <h3 style="color:#aaa;">PARKUR</h3>
-                  <div style="font-size:24px; font-weight:bold; color:#4caf50;">100K / 4000m+</div>
-                  <div style="color:#888; font-size:12px;">Sündiken ve Frig Vadisi rotaları.</div>
+                  <h3>PARKUR TEKNİK <span style="color:#4caf50">HAZIR</span></h3>
+                  <div class="stat-value-big">100K / 4000m+</div>
+                  <div class="stat-desc">
+                      Sündiken Dağları ve Frig Vadisi rotaları.
+                      <ul>
+                          <li>⛰️ <strong>Zirve:</strong> Türkmen Dağı (1826m)</li>
+                          <li>🏛️ <strong>Kültür:</strong> Frig Yolu Entegrasyonu</li>
+                          <li>🌲 <strong>Zemin:</strong> %85 Orman Yolu</li>
+                      </ul>
+                  </div>
+              </div>
+
+              <div class="stat-card">
+                  <h3>İNSAN KAYNAĞI <span style="color:#2196f3">ÜNİVERSİTE</span></h3>
+                  <div class="stat-desc">
+                      Eskişehir'deki 3 üniversite ile stratejik gönüllü iş birliği.
+                  </div>
+                  <div class="uni-grid">
+                      <div class="uni-badge">A.Ü. (Turizm)</div>
+                      <div class="uni-badge">ESOGÜ (Sağlık)</div>
+                      <div class="uni-badge">ESTÜ (Spor)</div>
+                  </div>
+              </div>
+
+              <div class="stat-card">
+                  <h3>YOL HARİTASI</h3>
+                  <div class="roadmap-container">
+                      <div class="roadmap-item done">
+                          <div class="roadmap-date">2024 Q4</div>
+                          <div class="roadmap-title">Fizibilite & Rota Belirleme</div>
+                      </div>
+                      <div class="roadmap-item done">
+                          <div class="roadmap-date">2025 Q1</div>
+                          <div class="roadmap-title">UTMB® Ön Görüşmeler</div>
+                      </div>
+                      <div class="roadmap-item">
+                          <div class="roadmap-date">2025 Q3</div>
+                          <div class="roadmap-title">Test Yarışı (Candidate Race)</div>
+                      </div>
+                      <div class="roadmap-item">
+                          <div class="roadmap-date">2026</div>
+                          <div class="roadmap-title">UTMB® World Series Event</div>
+                      </div>
+                  </div>
               </div>
           </div>
       </div>
@@ -210,35 +264,34 @@
 
   <audio id="audioPlayer" src="assets/slide_03_audio.m4a" preload="auto"></audio>
   
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-
   <script>
     // --- VERİLER ---
     const slidesData = [
       { file: "assets/slide_01.webp", title: "Kapak: Vizyon" },
       { file: "assets/slide_02.webp", title: "UTMB® Nedir?" }, 
       { file: "assets/slide_03.webp", title: "Ekonomik Etki" },
-      { file: "assets/slide_12.webp", title: "Yol Haritası" }
+      { file: "assets/slide_04.webp", title: "Operasyon" },
+      { file: "assets/slide_05.webp", title: "Yetenek" },
+      { file: "assets/slide_12.webp", title: "Yol Haritası" },
+      { file: "assets/slide_14.webp", title: "Kapanış" }
     ];
 
     const utmbEvents = [
         { name: "Dacia UTMB® Mont-Blanc", location: "Chamonix 🇫🇷", date: "Ağustos", tag: "FINALS" },
         { name: "Cappadocia Ultra-Trail®", location: "Türkiye 🇹🇷", date: "Ekim", tag: "EVENT" },
-        { name: "Val d'Aran by UTMB®", location: "İspanya 🇪🇸", date: "Temmuz", tag: "MAJOR" }
+        { name: "Val d'Aran by UTMB®", location: "İspanya 🇪🇸", date: "Temmuz", tag: "MAJOR" },
+        { name: "Nice Côte d'Azur", location: "Fransa 🇫🇷", date: "Eylül", tag: "SERIES" },
+        { name: "Eiger Ultra-Trail™", location: "İsviçre 🇨🇭", date: "Temmuz", tag: "SERIES" }
     ];
 
-    // DEĞİŞKENLER
     let currentIndex = 0;
-    let map = null; // Harita değişkeni global
     const imgEl = document.getElementById('currentSlide');
     
     // NAVIGATION
     function switchView(viewName) {
-        // Hepsini Gizle
         document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
         document.querySelectorAll('.nav-btn-main').forEach(el => el.classList.remove('active'));
 
-        // İlgili Olanı Aç
         if(viewName === 'dashboard') {
             document.getElementById('dashboardView').classList.add('active-view');
             document.getElementById('btnHome').classList.add('active');
@@ -250,21 +303,14 @@
         else if(viewName === 'strategy') {
             document.getElementById('strategyView').classList.add('active-view');
             document.getElementById('btnStrategy').classList.add('active');
-            
-            // HARİTAYI YÜKLE (Kritik Nokta)
-            setTimeout(() => {
-                initMap(); 
-            }, 100); 
         }
     }
 
-    // SLIDE FONKSİYONLARI
     function showSlide(index) {
         if(index < 0) index = 0;
         if(index >= slidesData.length) index = slidesData.length - 1;
         currentIndex = index;
         
-        // Slayt view'i aç
         document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
         document.getElementById('slideView').classList.add('active-view');
         
@@ -273,11 +319,9 @@
         document.getElementById('slideName').innerText = slidesData[currentIndex].title;
     }
 
-    // BUTON EVENTLERİ
     document.getElementById('btnNext').onclick = () => showSlide(currentIndex + 1);
     document.getElementById('btnPrev').onclick = () => showSlide(currentIndex - 1);
 
-    // MENU OLUŞTURMA
     const menuList = document.getElementById('menuList');
     slidesData.forEach((slide, i) => {
         const li = document.createElement('li');
@@ -287,36 +331,6 @@
         menuList.appendChild(li);
     });
 
-    // HARİTA FONKSİYONU (FIX)
-    function initMap() {
-        // Harita div'i görünür mü kontrol et?
-        const mapContainer = document.getElementById('raceMap');
-        if (!mapContainer || mapContainer.offsetHeight === 0) return;
-
-        // Harita zaten varsa boyutunu güncelle, yoksa oluştur
-        if (map) {
-            map.invalidateSize(); // BU KOMUT HAYAT KURTARIR
-            return;
-        }
-
-        // Haritayı İlk Kez Oluştur
-        map = L.map('raceMap').setView([39.760, 30.525], 11);
-
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            maxZoom: 19
-        }).addTo(map);
-
-        // Rota Çizgileri
-        const route20k = [[39.760, 30.525], [39.750, 30.500], [39.740, 30.540], [39.760, 30.525]];
-        L.polyline(route20k, {color: '#4caf50', weight: 4}).addTo(map).bindPopup("20K Parkuru");
-
-        const route50k = [[39.760, 30.525], [39.720, 30.450], [39.680, 30.400], [39.700, 30.550], [39.760, 30.525]];
-        L.polyline(route50k, {color: '#ff9800', weight: 4}).addTo(map).bindPopup("50K Parkuru");
-
-        L.marker([39.760, 30.525]).addTo(map).bindPopup("Start/Finish: Odunpazarı").openPopup();
-    }
-
-    // DASHBOARD EVENTLERİ
     const eventContainer = document.getElementById('events-container');
     utmbEvents.forEach(evt => {
         const div = document.createElement('div');
@@ -327,9 +341,12 @@
         eventContainer.appendChild(div);
     });
 
-    // Başlangıç
-    showSlide(0);
+    const audioPlayer = document.getElementById('audioPlayer');
+    function togglePodcast() {
+        if (audioPlayer.paused) { audioPlayer.play(); } else { audioPlayer.pause(); }
+    }
 
+    showSlide(0);
   </script>
 </body>
 </html>
